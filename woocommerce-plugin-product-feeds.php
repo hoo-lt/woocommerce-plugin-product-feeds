@@ -13,5 +13,6 @@ require __DIR__ . '/vendor/autoload.php';
 use Hoo\ProductFeeds\Presentation;
 use Hoo\ProductFeeds\Infrastructure;
 
-new Presentation\Taxonomy\Controller(new Infrastructure\Term\Repository)('product_brand');
-new Presentation\Taxonomy\Controller(new Infrastructure\Term\Repository)('product_cat');
+$taxonomyController = new Presentation\Taxonomy\Controller(new Infrastructure\Term\Repository);
+$taxonomyController('product_brand');
+$taxonomyController('product_cat');
