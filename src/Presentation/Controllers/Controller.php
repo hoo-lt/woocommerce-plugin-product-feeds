@@ -8,17 +8,11 @@ class Controller
 		protected readonly string $id,
 		protected readonly string $taxonomy,
 	) {
-		add_filter("manage_{$this->id}_columns", [
-			$this,
-			'add',
-		]);
-		add_filter("manage_{$this->taxonomy}_custom_column", [
-			$this,
-			'add2',
-		]);
+		add_filter("manage_{$this->id}_columns", fn($columns) => $this->add($columns));
+		add_filter("manage_{$this->taxonomy}_custom_column", fn($string, $column_name, $term_id) => $this->add2($string, $column_name, $term_id));
 	}
 
-	protected function add($columns)
+	protected function add(array $columns)
 	{
 		$columns['product_feeds'] = __('Product feeds', 'woocommerce-plugin-product-feeds');
 		return $columns;
@@ -26,10 +20,9 @@ class Controller
 
 	protected function add2(string $string, string $column_name, int $term_id)
 	{
-		switch ($column_name) {
-			case 'product_feeds':
-				echo get_term_meta($term_id, '_product_feeds', true) != false ? __('Yes', 'woocommerce-plugin-product-feeds') : __('No', 'woocommerce-plugin-product-feeds');
-				break;
-		}
+		return match ($column_name) {
+			'product_feeds' => get_term_meta($term_id, '_product_feeds', true) != false ? __('Yes', 'woocommerce-plugin-product-feeds') : __('No', 'woocommerce-plugin-product-feeds'),
+			default => $string,
+		};
 	}
 }
