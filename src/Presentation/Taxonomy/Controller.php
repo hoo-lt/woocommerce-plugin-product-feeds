@@ -32,13 +32,12 @@ class Controller
 		return $columns;
 	}
 
-	protected function add2(string $string, string $column_name, int $term_id): string
+	protected function add2(string $string, string $columnName, int $termId): string
 	{
-		if ($column_name !== self::COLUMN_NAME) {
-			return $string;
-		}
-
-		return $this->repository->get($term_id)->label();
+		return match ($columnName) {
+			self::COLUMN_NAME => $this->repository->get($termId)->label(),
+			default => $string,
+		};
 	}
 
 	protected function renderEditField(WP_Term $term, string $taxonomy): void
@@ -70,8 +69,8 @@ class Controller
 		';
 	}
 
-	protected function saveField(int $term_id): void
+	protected function saveField(int $termId): void
 	{
-		$this->repository->set($term_id, Enum::tryFrom($_POST[self::COLUMN_NAME]) ?? Enum::Included);
+		$this->repository->set($termId, Enum::tryFrom($_POST[self::COLUMN_NAME]) ?? Enum::Included);
 	}
 }
