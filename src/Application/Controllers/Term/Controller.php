@@ -5,7 +5,7 @@ namespace Hoo\ProductFeeds\Application\Controllers\Term;
 use Hoo\ProductFeeds\Application;
 use Hoo\ProductFeeds\Domain;
 
-class Controller
+class Controller implements ControllerInterface
 {
 	public function __construct(
 		protected readonly Application\Mappers\Term\MapperInterface $mapper,
@@ -17,35 +17,22 @@ class Controller
 	public function template(int $id): string
 	{
 		return ($this->template)('/Term', [
-			'icon' => $this->mapper->icon(
-				$this->repository->get($id)
-			),
+			'icon' => $this->icon($id),
 		]);
 	}
 
 	public function addTemplate(): string
 	{
-		$labels = $this->mapper->labels();
-
 		return ($this->template)('/Term/Add', [
-			'value' => null,
-			'options' => array_map(fn($value, $label) => [
-				'value' => $value,
-				'label' => $label,
-			], array_keys($labels), array_values($labels)),
+			'labels' => $this->labels(),
 		]);
 	}
 
 	public function editTemplate(int $id): string
 	{
-		$labels = $this->mapper->labels();
-
 		return ($this->template)('/Term/Edit', [
-			'value' => $this->repository->get($id)->value,
-			'options' => array_map(fn($value, $label) => [
-				'value' => $value,
-				'label' => $label,
-			], array_keys($labels), array_values($labels)),
+			'value' => $this->value($id),
+			'labels' => $this->labels(),
 		]);
 	}
 
@@ -57,5 +44,27 @@ class Controller
 	public function edit(int $id, string $value): void
 	{
 		$this->repository->set($id, Domain\Term::from($value));
+	}
+
+	protected function value(int $id): string
+	{
+		return $this->repository->get($id)->value;
+	}
+
+	protected function labels(): array
+	{
+		$labels = $this->mapper->labels();
+
+		return array_map(fn($value, $label) => [
+			'value' => $value,
+			'label' => $label,
+		], array_keys($labels), array_values($labels));
+	}
+
+	protected function icon(int $id): string
+	{
+		return $this->mapper->icon(
+			$this->repository->get($id)
+		);
 	}
 }

@@ -19,6 +19,7 @@ use Hoo\ProductFeeds\Infrastructure;
 
 $containerBuilder = new DI\ContainerBuilder();
 $containerBuilder->addDefinitions([
+	Application\Controllers\Term\ControllerInterface::class => DI\get(Application\Controllers\Term\Controller::class),
 	Application\Mappers\Term\MapperInterface::class => DI\get(Infrastructure\Mappers\Term\Mapper::class),
 	Application\Repositories\Term\RepositoryInterface::class => DI\get(Infrastructure\Repositories\Term\Repository::class),
 	Application\TemplateInterface::class => DI\get(Infrastructure\Template::class),
