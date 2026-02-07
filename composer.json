@@ -1,6 +1,6 @@
 {
-    "name": "hoo-lt/woocommerce-plugin-product-feeds",
-    "description": "WooCommerce plugin - Product feeds",
+    "name": "hoo-lt/woocommerce-product-feeds",
+    "description": "WooCommerce product feeds",
     "type": "project",
     "license": "GPL-3.0",
     "autoload": {

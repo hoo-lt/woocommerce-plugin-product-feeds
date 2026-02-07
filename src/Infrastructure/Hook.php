@@ -16,7 +16,7 @@ class Hook
 
 	public function __invoke()
 	{
-		wp_enqueue_style('product-feeds-admin', plugins_url('/assets/css/admin.css', __DIR__ . '/../../woocommerce-plugin-product-feeds.php'));
+		wp_enqueue_style('product-feeds-admin', plugins_url('/assets/css/admin.css', __DIR__ . '/../../woocommerce-product-feeds.php'));
 
 		foreach (Domain\Taxonomy::cases() as $taxonomy) {
 			add_filter("manage_edit-{$taxonomy->value}_columns", [

@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Plugin Name: Product feeds
+ * Plugin Name: WooCommerce product feeds
  * Plugin URI: https://github.com/hoo-lt/woocommerce-product-feeds
  * Description:
  * Version: 1.0.0
- * Requires at least:
+ * Requires at least: 6.5
  * Requires PHP: 8.2
  * Author: HOO
  * Author URI: https://github.com/hoo-lt

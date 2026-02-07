@@ -10,8 +10,8 @@ class Mapper implements Application\Mappers\Term\MapperInterface
 	public function label(Domain\Term $term): string
 	{
 		return match ($term) {
-			Domain\Term::Include => __('Include', 'woocommerce-plugin-product-feeds'),
-			Domain\Term::Exclude => __('Exclude', 'woocommerce-plugin-product-feeds'),
+			Domain\Term::Include => __('Include', 'woocommerce-product-feeds'),
+			Domain\Term::Exclude => __('Exclude', 'woocommerce-product-feeds'),
 		};
 	}
 

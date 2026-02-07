@@ -1,2 +1,2 @@
-# woocommerce-plugin-product-feeds
-WooCommerce plugin - product feeds
+# woocommerce-product-feeds
+WooCommerce product feeds

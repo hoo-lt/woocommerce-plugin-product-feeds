@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "237f90919f6b7bc27213e334d3bf70b9",
+    "content-hash": "1dee8c3d31032bdbbe9eee281ce94d4a",
     "packages": [
         {
             "name": "laravel/serializable-closure",

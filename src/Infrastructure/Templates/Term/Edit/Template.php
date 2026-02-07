@@ -7,7 +7,7 @@ if (!defined('PRODUCT_FEEDS')) {
 <tr class="form-field">
 	<th scope="row">
 		<label for="product_feeds">
-			<?= esc_html__('Product feeds', 'woocommerce-plugin-product-feeds'); ?>
+			<?= esc_html__('Product feeds', 'woocommerce-product-feeds'); ?>
 		</label>
 	</th>
 	<td>
@@ -19,7 +19,7 @@ if (!defined('PRODUCT_FEEDS')) {
 			<?php endforeach; ?>
 		</select>
 		<p class="description" id="product_feeds-description">
-			<?= esc_html__('Product feeds', 'woocommerce-plugin-product-feeds'); ?>
+			<?= esc_html__('Product feeds', 'woocommerce-product-feeds'); ?>
 		</p>
 	</td>
 </tr>

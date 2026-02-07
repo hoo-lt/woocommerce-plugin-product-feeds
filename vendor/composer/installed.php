@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => 'hoo-lt/woocommerce-plugin-product-feeds',
+        'name' => 'hoo-lt/woocommerce-product-feeds',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'f45f9df41b1cd2059d61f94a9b92d5cf63ef3fe2',
+        'reference' => '6322d46be6d7dae9ef8aadbbcf1d721ca20609d1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'hoo-lt/woocommerce-plugin-product-feeds' => array(
+        'hoo-lt/woocommerce-product-feeds' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'f45f9df41b1cd2059d61f94a9b92d5cf63ef3fe2',
+            'reference' => '6322d46be6d7dae9ef8aadbbcf1d721ca20609d1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
