@@ -58,34 +58,3 @@ $filterHooks();
 register_activation_hook(__FILE__, function () {
 	flush_rewrite_rules();
 });
-
-$repository = $container->get(Infrastructure\Repositories\TermTaxonomy\Repository::class);
-var_dump(
-	$repository->excluded()
-);
-
-function get()
-{
-	global $wpdb;
-
-	($wpdb->get_results($wpdb->prepare(
-		"WITH RECURSIVE excluded_tree AS (
-        SELECT term_id FROM {$wpdb->termmeta} WHERE meta_key = %s AND meta_value = %s
-        UNION ALL
-        SELECT tt.term_id FROM {$wpdb->term_taxonomy} tt
-        INNER JOIN excluded_tree et ON tt.parent = et.term_id
-    )
-    SELECT DISTINCT p.ID, p.post_title
-    FROM {$wpdb->posts} p
-    INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
-    WHERE p.post_type = 'product'
-      AND p.post_status = 'publish'
-      AND p.ID NOT IN (
-          SELECT tr2.object_id
-          FROM {$wpdb->term_relationships} tr2
-          WHERE tr2.term_taxonomy_id IN (SELECT term_id FROM excluded_tree)
-      )",
-		'product_feeds', // Сюда СТРОКУ руками для теста
-		'exclude'           // И сюда СТРОКУ руками
-	), ARRAY_A));
-}

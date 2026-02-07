@@ -31,7 +31,7 @@ class ActionHooks
 	{
 		wp_enqueue_style(
 			'product-feeds-admin',
-			plugins_url('/assets/css/admin.css', __DIR__ . '/../../woocommerce-product-feeds.php')
+			plugins_url('/assets/css/admin.css', __DIR__ . '/../../../woocommerce-product-feeds.php')
 		);
 	}
 
