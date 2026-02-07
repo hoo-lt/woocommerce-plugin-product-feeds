@@ -1,6 +1,5 @@
 <?php
 
-use function DI\autowire;
 /**
  * Plugin Name: Product feeds
  * Version: 1.0.0
@@ -16,6 +15,8 @@ const PRODUCT_FEEDS = true;
 
 use Hoo\ProductFeeds\Application;
 use Hoo\ProductFeeds\Infrastructure;
+
+use DI;
 
 $containerBuilder = new DI\ContainerBuilder();
 $containerBuilder->addDefinitions([
