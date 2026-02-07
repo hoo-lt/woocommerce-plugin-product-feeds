@@ -1,0 +1,15 @@
+.column-product_feeds {
+  text-align: center !important;
+}
+
+.product-feeds__icon::before {
+  font-family: "WooCommerce";
+}
+
+.product-feeds__icon--status-cancelled::before {
+  content: "\e013";
+}
+
+.product-feeds__icon--status-completed::before {
+  content: "\e015";
+}

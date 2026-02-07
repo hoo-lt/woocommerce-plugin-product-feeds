@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\ProductFeeds\Application\Term;
+namespace Hoo\ProductFeeds\Application\Repositories\Term;
 
 use Hoo\ProductFeeds\Domain\Term;
 

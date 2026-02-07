@@ -1,11 +1,11 @@
 <?php
 
-namespace Hoo\ProductFeeds\Infrastructure\Term;
+namespace Hoo\ProductFeeds\Infrastructure\Repositories\Term;
 
 use Hoo\ProductFeeds\Application;
 use Hoo\ProductFeeds\Domain;
 
-class Repository implements Application\Term\RepositoryInterface
+class Repository implements Application\Repositories\Term\RepositoryInterface
 {
 	protected const KEY = 'product_feeds';
 
@@ -13,7 +13,7 @@ class Repository implements Application\Term\RepositoryInterface
 	{
 		$value = get_term_meta($id, self::KEY, true);
 		if (!$value) {
-			return Domain\Term::Included;
+			return Domain\Term::Include;
 		}
 
 		return Domain\Term::from($value);

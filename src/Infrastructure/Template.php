@@ -8,20 +8,26 @@ class Template implements Application\TemplateInterface
 {
 	protected string $path;
 
-	public function __construct(string $path)
+	public function __construct()
 	{
-		$this->path = "{$path}/src/Presentation/Template";
+		$this->path = __DIR__ . '/Templates';
 	}
 
-	public function __invoke(string $template, array $array): void
+	public function __invoke(string $template, array $array): string
 	{
-		$path = "{$this->path}/$template.php";
+		$path = "{$this->path}/{$template}/Template.php";
 		if (!file_exists($path)) {
 			trigger_error("Template not found: $path", E_USER_WARNING);
 		}
 
-		extract($array);
+		ob_start();
 
-		require($path);
+		(static function ($path, $array) {
+			extract($array);
+
+			require($path);
+		})($path, $array);
+
+		return ob_get_clean();
 	}
 }
