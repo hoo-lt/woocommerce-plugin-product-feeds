@@ -18,6 +18,11 @@ class Hook
 	{
 		wp_enqueue_style('product-feeds-admin', plugins_url('/assets/css/admin.css', __DIR__ . '/../../woocommerce-product-feeds.php'));
 
+		add_action('init', [
+			$this,
+			'add_feed'
+		], PHP_INT_MAX, 0);
+
 		foreach (Domain\Taxonomy::cases() as $taxonomy) {
 			add_filter("manage_edit-{$taxonomy->value}_columns", [
 				$this,
@@ -44,6 +49,13 @@ class Hook
 				'edited_taxonomy'
 			], PHP_INT_MAX, 3);
 		}
+	}
+
+	public function add_feed(): void
+	{
+		add_feed('kaina24', function () {
+
+		});
 	}
 
 	public function manage_edit_taxonomy_columns(array $columns): array
