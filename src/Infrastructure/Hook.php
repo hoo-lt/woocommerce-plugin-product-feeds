@@ -9,9 +9,15 @@ use WP_Term;
 
 class Hook
 {
+	protected readonly Application\Controllers\Term\ControllerInterface $termController;
+	protected readonly array $feedControllers;
+
 	public function __construct(
-		protected readonly Application\Controllers\Term\ControllerInterface $termController,
+		Application\Controllers\Term\ControllerInterface $termController,
+		Application\Controllers\Feed\ControllerInterface ...$feedControllers,
 	) {
+		$this->termController = $termController;
+		$this->feedControllers = $feedControllers;
 	}
 
 	public function __invoke(): void
@@ -20,7 +26,7 @@ class Hook
 
 		add_action('init', [
 			$this,
-			'init'
+			'add_feeds'
 		], PHP_INT_MAX, 0);
 
 		foreach (Domain\Taxonomy::cases() as $taxonomy) {
@@ -51,11 +57,13 @@ class Hook
 		}
 	}
 
-	public function init(): void
+	public function add_feeds(): void
 	{
-		add_feed('kaina24', function () {
-
-		});
+		foreach ($this->feedControllers as $feedController) {
+			add_feed($feedController->path(), function () use ($feedController) {
+				echo $feedController();
+			});
+		}
 	}
 
 	public function manage_edit_taxonomy_columns(array $columns): array
