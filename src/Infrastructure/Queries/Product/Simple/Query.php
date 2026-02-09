@@ -20,7 +20,16 @@ class Query implements Infrastructure\Queries\QueryInterface
 
 	public function __invoke(): string
 	{
-		$excludedPlaceholders = $this->excludedIds ? "AND wp_posts.ID NOT IN (" . implode(', ', array_fill(0, count($this->excludedIds), '%d')) . ")" : '';
+		$postsIdNotIn = $this->excludedIds ? "wp_posts.ID NOT IN (" . implode(', ', array_fill(0, count($this->excludedIds), '%d')) . ")" : '';
+
+		$where = ($postsIdNotIn) ? <<<SQL
+				WHERE wp_posts.post_type = 'product'
+					AND wp_posts.post_status = 'publish'
+					AND {$postsIdNotIn}
+			SQL : <<<SQL
+				WHERE wp_posts.post_type = 'product'
+					AND wp_posts.post_status = 'publish'
+			SQL;
 
 		$query = <<<SQL
 			WITH posts AS (
@@ -39,9 +48,7 @@ class Query implements Infrastructure\Queries\QueryInterface
 					ON wp_terms.term_id = wp_term_taxonomy.term_id
 					AND wp_terms.slug = 'simple'
 
-				WHERE wp_posts.post_type = 'product'
-					AND wp_posts.post_status = 'publish'
-					{$excludedPlaceholders}
+				{$where}
 			),
 
 			woocommerce_attribute_taxonomies AS (
