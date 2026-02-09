@@ -20,7 +20,9 @@ class Query implements Infrastructure\Queries\QueryInterface
 
 	public function __invoke(): string
 	{
-		$postsIdNotIn = $this->excludedIds ? "wp_posts.ID NOT IN (" . implode(', ', array_fill(0, count($this->excludedIds), '%d')) . ")" : '';
+		$postsId = $this->excludedIds;
+
+		$postsIdNotIn = $postsId ? "wp_posts.ID NOT IN (" . implode(', ', array_fill(0, count($postsId), '%d')) . ")" : '';
 
 		$where = ($postsIdNotIn) ? <<<SQL
 				WHERE wp_posts.post_type = 'product'
@@ -132,6 +134,6 @@ class Query implements Infrastructure\Queries\QueryInterface
 				ON attribute.object_id = posts.ID
 		SQL;
 
-		return $this->excludedIds ? $this->wpdb->prepare($query, ...$this->excludedIds) : $this->wpdb->prepare($query);
+		return $this->excludedIds ? $this->wpdb->prepare($query, ...$postsId) : $this->wpdb->prepare($query);
 	}
 }
