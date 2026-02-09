@@ -8,12 +8,12 @@ class Repository
 {
 	public function __construct(
 		protected readonly Infrastructure\Clients\ClientInterface $client,
-		protected readonly Infrastructure\Queries\TermTaxonomy\Excluded\Query $excluded,
+		protected readonly Infrastructure\Queries\TermRelationships\Excluded\Query $termRelationshipsExcludedQuery,
 	) {
 	}
 
 	public function excluded()
 	{
-		return $this->client->select($this->excluded);
+		return $this->client->select($this->termRelationshipsExcludedQuery);
 	}
 }

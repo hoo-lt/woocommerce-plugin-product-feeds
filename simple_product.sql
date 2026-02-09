@@ -89,8 +89,7 @@ terms AS (
 	SELECT
 		wp_term_relationships.object_id,
 		wp_term_taxonomy.taxonomy,
-		wp_terms.name,
-		NULL AS attribute_label
+		wp_terms.name
 
 	FROM posts
 
@@ -105,9 +104,9 @@ terms AS (
 		'product_brand',
 		'product_cat'
 	)
+),
 
-	UNION ALL
-
+attribute AS (
 	SELECT
 		wp_term_relationships.object_id,
 		wp_term_taxonomy.taxonomy,
@@ -155,9 +154,5 @@ LEFT JOIN terms AS brand
 LEFT JOIN terms AS category
 	ON category.object_id = posts.ID
 	AND category.taxonomy = 'product_cat'
-LEFT JOIN terms AS attribute
+LEFT JOIN attribute
 	ON attribute.object_id = posts.ID
-	AND attribute.taxonomy NOT IN (
-		'product_brand',
-		'product_cat'
-	);
