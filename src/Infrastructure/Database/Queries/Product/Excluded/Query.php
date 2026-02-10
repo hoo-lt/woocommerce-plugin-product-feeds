@@ -1,13 +1,13 @@
 <?php
 
-namespace Hoo\ProductFeeds\Infrastructure\Queries\Product\Excluded;
+namespace Hoo\ProductFeeds\Infrastructure\Database\Queries\Product\Excluded;
 
 use Hoo\ProductFeeds\Domain;
 use Hoo\ProductFeeds\Infrastructure;
 
 use wpdb;
 
-class Query implements Infrastructure\Queries\QueryInterface
+class Query implements Infrastructure\Database\Queries\QueryInterface
 {
 	public function __construct(
 		protected readonly wpdb $wpdb
@@ -51,7 +51,7 @@ class Query implements Infrastructure\Queries\QueryInterface
 			)
 
 			SELECT DISTINCT
-				term_relationships.object_id
+				term_relationships.object_id AS id
 
 			FROM {$this->wpdb->term_relationships} AS term_relationships
 
