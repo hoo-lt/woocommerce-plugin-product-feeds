@@ -10,7 +10,8 @@ WITH cte_term_relationships AS (
 cte_posts AS (
 	SELECT
 		posts.ID,
-		posts.post_title
+		posts.post_title,
+		posts.post_name
 
 	FROM :posts AS posts
 
@@ -43,7 +44,9 @@ cte_terms AS (
 	SELECT
 		term_relationships.object_id,
 		term_taxonomy.taxonomy,
-		terms.name
+		terms.term_id,
+		terms.name,
+		terms.slug
 
 	FROM cte_posts AS posts
 
@@ -64,7 +67,9 @@ cte_attribute AS (
 	SELECT
 		term_relationships.object_id,
 		term_taxonomy.taxonomy,
+		terms.term_id,
 		terms.name,
+		terms.slug,
 		woocommerce_attribute_taxonomies.attribute_label
 
 	FROM cte_posts AS posts
@@ -82,11 +87,16 @@ cte_attribute AS (
 SELECT
 	posts.ID AS id,
 	posts.post_title AS name,
+	posts.post_name AS slug,
 	price.meta_value AS price,
 	stock.meta_value AS stock,
 	gtin.meta_value AS gtin,
+	brand.term_id AS brand_id,
 	brand.name AS brand_name,
+	brand.slug AS brand_slug,
+	category.term_id AS category_id,
 	category.name AS category_name,
+	category.slug AS category_slug,
 	attribute.attribute_label AS attribute_name,
 	attribute.name AS term_name
 

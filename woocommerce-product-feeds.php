@@ -55,6 +55,9 @@ $actionHooks();
 $filterHooks = $container->get(Infrastructure\Hooks\FilterHooks::class);
 $filterHooks();
 
+$productsRepository = $container->get(Infrastructure\Repositories\Products\Repository::class);
+var_dump($productsRepository());
+
 register_activation_hook(__FILE__, function () {
 	flush_rewrite_rules();
 });

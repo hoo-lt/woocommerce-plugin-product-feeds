@@ -1,0 +1,47 @@
+<?php
+
+namespace Hoo\ProductFeeds\Domain;
+
+use ArrayIterator;
+use IteratorAggregate;
+use Traversable;
+
+class Products implements IteratorAggregate
+{
+	protected array $products;
+
+	public function get(int $id): Products\Product {
+		if (!$this->products[$id]) {
+			//throw domain exception
+		}
+
+		return $this->products[$id];
+	}
+
+	public function has(int $id): bool {
+		return (bool) $this->products[$id];
+	}
+
+	public function add(Products\Product $product): void
+	{
+		if ($this->products[$product->id]) {
+			return; //throw domain exception
+		}
+
+		$this->products[$product->id] = $product;
+	}
+
+	public function delete(int $id): void
+	{
+		if (!$this->products[$id]) {
+			return; //throw domain exception
+		}
+
+		unset($this->products[$id]);
+	}
+
+	public function getIterator(): Traversable
+	{
+		return new ArrayIterator($this->products);
+	}
+}

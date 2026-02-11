@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\ProductFeeds\Infrastructure\Repositories\ProductFeed;
+namespace Hoo\ProductFeeds\Infrastructure\Repositories\Products;
 
 use Hoo\ProductFeeds\Infrastructure;
 
@@ -11,6 +11,7 @@ class Repository
 		protected readonly Infrastructure\Database\Queries\Select\TermTaxonomy\Excluded\Query $selectExcludedTermTaxonomyQuery,
 		protected readonly Infrastructure\Database\Queries\Select\Product\Simple\Query $selectSimpleProductQuery,
 		protected readonly Infrastructure\Mappers\TermTaxonomy\Mapper $termTaxonomyMapper,
+		protected readonly Infrastructure\Mappers\Products\Mapper $productsMapper,
 	) {
 	}
 
@@ -27,6 +28,8 @@ class Repository
 				->exclude(...$excludedTermTaxonomyIds)
 		);
 
-		return $simpleProducts;
+		return ($this->productsMapper)([
+			...$simpleProducts,
+		]);
 	}
 }
