@@ -84,7 +84,7 @@ SELECT
 	posts.post_title AS name,
 	price.meta_value AS price,
 	stock.meta_value AS stock,
-	ean.meta_value AS ean,
+	gtin.meta_value AS gtin,
 	brand.name AS brand_name,
 	category.name AS category_name,
 	attribute.attribute_label AS attribute_name,
@@ -99,9 +99,9 @@ JOIN :postmeta AS price
 LEFT JOIN :postmeta AS stock
 	ON stock.post_id = posts.ID
 	AND stock.meta_key = '_stock'
-LEFT JOIN :postmeta AS ean
-	ON ean.post_id = posts.ID
-	AND ean.meta_key = '_global_unique_id'
+LEFT JOIN :postmeta AS gtin
+	ON gtin.post_id = posts.ID
+	AND gtin.meta_key = '_global_unique_id'
 LEFT JOIN cte_terms AS brand
 	ON brand.object_id = posts.ID
 	AND brand.taxonomy = 'product_brand'
