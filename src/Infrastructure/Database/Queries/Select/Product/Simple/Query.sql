@@ -97,7 +97,9 @@ SELECT
 	category.term_id AS category_id,
 	category.name AS category_name,
 	category.slug AS category_slug,
+	attribute.term_id AS attribute_id,
 	attribute.attribute_label AS attribute_name,
+	attribute.slug AS attribute_slug,
 	attribute.name AS term_name
 
 FROM cte_posts AS posts

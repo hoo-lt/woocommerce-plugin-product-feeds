@@ -4,6 +4,7 @@ namespace Hoo\ProductFeeds\Domain\Products;
 
 class Product
 {
+	public Product\Attributes $attributes;
 	public Product\Brands $brands;
 	public Product\Categories $categories;
 
@@ -15,6 +16,7 @@ class Product
 		public ?int $stock,
 		public ?string $gtin,
 	) {
+		$this->attributes = new Product\Attributes();
 		$this->brands = new Product\Brands();
 		$this->categories = new Product\Categories();
 	}

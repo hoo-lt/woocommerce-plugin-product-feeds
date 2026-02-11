@@ -12,7 +12,7 @@ class Brands implements IteratorAggregate
 
 	public function get(int $id): Brands\Brand
 	{
-		if (!$this->brands[$id]) {
+		if (!isset($this->brands[$id])) {
 			//throw domain exception
 		}
 
@@ -21,12 +21,12 @@ class Brands implements IteratorAggregate
 
 	public function has(int $id): bool
 	{
-		return (bool) $this->brands[$id];
+		return isset($this->brands[$id]);
 	}
 
 	public function add(Brands\Brand $brand): void
 	{
-		if ($this->brands[$brand->id]) {
+		if (isset($this->brands[$brand->id])) {
 			return; //throw domain exception
 		}
 
@@ -35,7 +35,7 @@ class Brands implements IteratorAggregate
 
 	public function delete(int $id): void
 	{
-		if (!$this->brands[$id]) {
+		if (isset($this->brands[$id])) {
 			return; //throw domain exception
 		}
 

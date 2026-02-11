@@ -12,7 +12,7 @@ class Categories implements IteratorAggregate
 
 	public function get(int $id): Categories\Category
 	{
-		if (!$this->categories[$id]) {
+		if (!isset($this->categories[$id])) {
 			//throw domain exception
 		}
 
@@ -21,12 +21,12 @@ class Categories implements IteratorAggregate
 
 	public function has(int $id): bool
 	{
-		return (bool) $this->categories[$id];
+		return isset($this->categories[$id]);
 	}
 
 	public function add(Categories\Category $category): void
 	{
-		if ($this->categories[$category->id]) {
+		if (isset($this->categories[$category->id])) {
 			return; //throw domain exception
 		}
 
@@ -35,7 +35,7 @@ class Categories implements IteratorAggregate
 
 	public function delete(int $id): void
 	{
-		if (!$this->categories[$id]) {
+		if (!isset($this->categories[$id])) {
 			return; //throw domain exception
 		}
 
