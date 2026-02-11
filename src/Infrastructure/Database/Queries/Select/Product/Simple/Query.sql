@@ -34,6 +34,7 @@ cte_posts AS (
 
 cte_woocommerce_attribute_taxonomies AS (
 	SELECT
+		woocommerce_attribute_taxonomies.attribute_id,
 		CONCAT('pa_', woocommerce_attribute_taxonomies.attribute_name) AS attribute_name,
 		woocommerce_attribute_taxonomies.attribute_label
 
@@ -70,6 +71,8 @@ cte_attribute AS (
 		terms.term_id,
 		terms.name,
 		terms.slug,
+		woocommerce_attribute_taxonomies.attribute_id,
+		woocommerce_attribute_taxonomies.attribute_name,
 		woocommerce_attribute_taxonomies.attribute_label
 
 	FROM cte_posts AS posts
@@ -97,10 +100,12 @@ SELECT
 	category.term_id AS category_id,
 	category.name AS category_name,
 	category.slug AS category_slug,
-	attribute.term_id AS attribute_id,
+	attribute.attribute_id AS attribute_id,
 	attribute.attribute_label AS attribute_name,
-	attribute.slug AS attribute_slug,
-	attribute.name AS term_name
+	attribute.attribute_name AS attribute_slug,
+	attribute.term_id AS term_id,
+	attribute.name AS term_name,
+	attribute.slug AS term_slug
 
 FROM cte_posts AS posts
 
