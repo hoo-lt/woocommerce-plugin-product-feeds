@@ -24,6 +24,26 @@ class Categories implements IteratorAggregate
 		return $this->categories[$id];
 	}
 
+	public function first(): Categories\Category
+	{
+		if (!$this->categories) {
+			//throw exception
+		}
+
+		$firstKey = array_key_first($this->categories);
+		return $this->categories[$firstKey];
+	}
+
+	public function last(): Categories\Category
+	{
+		if (!$this->categories) {
+			//throw exception
+		}
+
+		$lastKey = array_key_last($this->categories);
+		return $this->categories[$lastKey];
+	}
+
 	public function add(Categories\Category $category): void
 	{
 		if (isset($this->categories[$category->id])) {

@@ -24,6 +24,26 @@ class Products implements IteratorAggregate
 		return $this->products[$id];
 	}
 
+	public function first(): Products\Product
+	{
+		if (!$this->products) {
+			//throw exception
+		}
+
+		$firstKey = array_key_first($this->products);
+		return $this->products[$firstKey];
+	}
+
+	public function last(): Products\Product
+	{
+		if (!$this->products) {
+			//throw exception
+		}
+
+		$lastKey = array_key_last($this->products);
+		return $this->products[$lastKey];
+	}
+
 	public function add(Products\Product $product): void
 	{
 		if (isset($this->products[$product->id])) {

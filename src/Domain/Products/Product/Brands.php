@@ -24,6 +24,26 @@ class Brands implements IteratorAggregate
 		return $this->brands[$id];
 	}
 
+	public function first(): Brands\Brand
+	{
+		if (!$this->brands) {
+			//throw exception
+		}
+
+		$firstKey = array_key_first($this->brands);
+		return $this->brands[$firstKey];
+	}
+
+	public function last(): Brands\Brand
+	{
+		if (!$this->brands) {
+			//throw exception
+		}
+
+		$lastKey = array_key_last($this->brands);
+		return $this->brands[$lastKey];
+	}
+
 	public function add(Brands\Brand $brand): void
 	{
 		if (isset($this->brands[$brand->id])) {

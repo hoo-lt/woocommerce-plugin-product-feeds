@@ -24,6 +24,26 @@ class Attributes implements IteratorAggregate
 		return $this->attributes[$id];
 	}
 
+	public function first(): Attributes\Attribute
+	{
+		if (!$this->attributes) {
+			//throw exception
+		}
+
+		$firstKey = array_key_first($this->attributes);
+		return $this->attributes[$firstKey];
+	}
+
+	public function last(): Attributes\Attribute
+	{
+		if (!$this->attributes) {
+			//throw exception
+		}
+
+		$lastKey = array_key_last($this->attributes);
+		return $this->attributes[$lastKey];
+	}
+
 	public function add(Attributes\Attribute $attribute): void
 	{
 		if (isset($this->attributes[$attribute->id])) {

@@ -24,6 +24,26 @@ class Terms implements IteratorAggregate
 		return $this->terms[$id];
 	}
 
+	public function first(): Terms\Term
+	{
+		if (!$this->terms) {
+			//throw exception
+		}
+
+		$firstKey = array_key_first($this->terms);
+		return $this->terms[$firstKey];
+	}
+
+	public function last(): Terms\Term
+	{
+		if (!$this->terms) {
+			//throw exception
+		}
+
+		$lastKey = array_key_last($this->terms);
+		return $this->terms[$lastKey];
+	}
+
 	public function add(Terms\Term $term): void
 	{
 		if (isset($this->terms[$term->id])) {
