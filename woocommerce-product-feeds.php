@@ -32,7 +32,7 @@ $containerBuilder = new DI\ContainerBuilder();
 $containerBuilder->addDefinitions([
 	Application\Controllers\Term\ControllerInterface::class => DI\get(Application\Controllers\Term\Controller::class),
 	Application\Mappers\TermMeta\MapperInterface::class => DI\get(Infrastructure\Mappers\TermMeta\Mapper::class),
-	Application\TemplateInterface::class => DI\get(Infrastructure\Template::class),
+	Application\Template\TemplateInterface::class => DI\get(Infrastructure\Template\Template::class),
 
 	Domain\Repositories\Product\RepositoryInterface::class => DI\get(Infrastructure\Repositories\Product\Repository::class),
 	Domain\Repositories\TermMeta\RepositoryInterface::class => DI\get(Infrastructure\Repositories\TermMeta\Repository::class),
@@ -63,6 +63,4 @@ $filterHooks();
 $productRepository = $container->get(Infrastructure\Repositories\Product\Repository::class);
 var_dump($productRepository());
 
-register_activation_hook(__FILE__, function () {
-	flush_rewrite_rules();
-});
+register_activation_hook(__FILE__, flush_rewrite_rules());

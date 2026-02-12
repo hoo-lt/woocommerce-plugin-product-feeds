@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\ProductFeeds\Application;
+namespace Hoo\ProductFeeds\Application\Template;
 
 interface TemplateInterface
 {

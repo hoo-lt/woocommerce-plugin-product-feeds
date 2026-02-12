@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\ProductFeeds\Infrastructure;
+namespace Hoo\ProductFeeds\Infrastructure\Template;
 
 use Hoo\ProductFeeds\Application;
 
-class Template implements Application\TemplateInterface
+class Template implements Application\Template\TemplateInterface
 {
 	protected string $path;
 
