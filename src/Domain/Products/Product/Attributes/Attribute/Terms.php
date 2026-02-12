@@ -24,6 +24,10 @@ class Terms implements IteratorAggregate
 		return $this->terms[$id];
 	}
 
+	public function all(): array {
+		return $this->terms;
+	}
+
 	public function first(): Terms\Term
 	{
 		if (!$this->terms) {

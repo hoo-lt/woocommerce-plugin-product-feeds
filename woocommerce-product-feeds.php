@@ -22,7 +22,9 @@ if (!defined('ABSPATH')) {
 
 require __DIR__ . '/vendor/autoload.php';
 
-const WOOCOMMERCE_PRODUCT_FEEDS = true;
+define('WOOCOMMERCE_PRODUCT_FEEDS', true);
+define('WOOCOMMERCE_PRODUCT_FEEDS_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('WOOCOMMERCE_PRODUCT_FEEDS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
 use Hoo\ProductFeeds\Presentation;
 use Hoo\ProductFeeds\Domain;
@@ -59,9 +61,6 @@ $actionHooks();
 
 $filterHooks = $container->get(Infrastructure\Hooks\FilterHooks::class);
 $filterHooks();
-
-//$productRepository = $container->get(Domain\Repositories\Product\RepositoryInterface::class);
-//var_dump($productRepository->all());
 
 register_activation_hook(__FILE__, function () {
 	flush_rewrite_rules();
