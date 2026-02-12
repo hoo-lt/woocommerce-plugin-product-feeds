@@ -25,15 +25,20 @@ require __DIR__ . '/vendor/autoload.php';
 const WOOCOMMERCE_PRODUCT_FEEDS = true;
 
 use Hoo\ProductFeeds\Application;
+use Hoo\ProductFeeds\Domain;
 use Hoo\ProductFeeds\Infrastructure;
 
 $containerBuilder = new DI\ContainerBuilder();
 $containerBuilder->addDefinitions([
 	Application\Controllers\Term\ControllerInterface::class => DI\get(Application\Controllers\Term\Controller::class),
 	Application\Mappers\TermMeta\MapperInterface::class => DI\get(Infrastructure\Mappers\TermMeta\Mapper::class),
-	Application\Repositories\TermMeta\RepositoryInterface::class => DI\get(Infrastructure\Repositories\TermMeta\Repository::class),
 	Application\TemplateInterface::class => DI\get(Infrastructure\Template::class),
+
+	Domain\Repositories\Product\RepositoryInterface::class => DI\get(Infrastructure\Repositories\Product\Repository::class),
+	Domain\Repositories\TermMeta\RepositoryInterface::class => DI\get(Infrastructure\Repositories\TermMeta\Repository::class),
+
 	Infrastructure\Database\DatabaseInterface::class => DI\get(Infrastructure\Database\Database::class),
+
 	Infrastructure\Hooks\ActionHooks::class => DI\create()
 		->constructor(
 			DI\get(Application\Controllers\ProductFeed\Kaina24Lt\Controller::class),
@@ -55,8 +60,8 @@ $actionHooks();
 $filterHooks = $container->get(Infrastructure\Hooks\FilterHooks::class);
 $filterHooks();
 
-$productsRepository = $container->get(Infrastructure\Repositories\Products\Repository::class);
-var_dump($productsRepository());
+$productRepository = $container->get(Infrastructure\Repositories\Product\Repository::class);
+var_dump($productRepository());
 
 register_activation_hook(__FILE__, function () {
 	flush_rewrite_rules();

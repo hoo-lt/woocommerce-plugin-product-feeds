@@ -1,16 +1,16 @@
 <?php
 
-namespace Hoo\ProductFeeds\Infrastructure\Mappers\Products;
+namespace Hoo\ProductFeeds\Infrastructure\Mappers\Product;
 
 use Hoo\ProductFeeds\Domain;
 
 class Mapper
 {
-	public function __invoke(array $rows): Domain\Products
+	public function __invoke(array $table): Domain\Products
 	{
 		$products = new Domain\Products();
 
-		foreach ($rows as $row) {
+		foreach ($table as $row) {
 			if ($products->has((int) $row['id'])) {
 				$product = $products->get((int) $row['id']);
 			} else {
@@ -35,6 +35,16 @@ class Mapper
 						$row['attribute_slug']
 					);
 					$product->attributes->add($attribute);
+				}
+
+				if (isset($row['term_id'])) {
+					if (!$attribute->terms->has($row['term_id'])) {
+						$attribute->terms->add(new Domain\Products\Product\Attributes\Attribute\Terms\Term(
+							(int) $row['term_id'],
+							$row['term_name'],
+							$row['term_slug']
+						));
+					}
 				}
 			}
 

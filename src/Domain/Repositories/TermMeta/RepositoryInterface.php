@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\ProductFeeds\Application\Repositories\TermMeta;
+namespace Hoo\ProductFeeds\Domain\Repositories\TermMeta;
 
 use Hoo\ProductFeeds\Domain;
 

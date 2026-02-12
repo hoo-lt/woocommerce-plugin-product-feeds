@@ -2,10 +2,9 @@
 
 namespace Hoo\ProductFeeds\Infrastructure\Repositories\TermMeta;
 
-use Hoo\ProductFeeds\Application;
 use Hoo\ProductFeeds\Domain;
 
-class Repository implements Application\Repositories\TermMeta\RepositoryInterface
+class Repository implements Domain\Repositories\TermMeta\RepositoryInterface
 {
 	public function get(int $id): Domain\TermMeta
 	{

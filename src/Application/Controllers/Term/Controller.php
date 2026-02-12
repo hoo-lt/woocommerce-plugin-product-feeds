@@ -9,7 +9,7 @@ class Controller implements ControllerInterface
 {
 	public function __construct(
 		protected readonly Application\Mappers\TermMeta\MapperInterface $termMetaMapper,
-		protected readonly Application\Repositories\TermMeta\RepositoryInterface $termMetaRepository,
+		protected readonly Domain\Repositories\TermMeta\RepositoryInterface $termMetaRepository,
 		protected readonly Application\TemplateInterface $template,
 	) {
 	}
