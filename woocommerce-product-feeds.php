@@ -39,14 +39,12 @@ $containerBuilder->addDefinitions([
 
 	Infrastructure\Database\DatabaseInterface::class => DI\get(Infrastructure\Database\Database::class),
 
-	/*
 	Infrastructure\Hooks\ActionHooks::class => DI\create()
 		->constructor(
-			DI\get(Application\Controllers\ProductFeed\Kaina24Lt\Controller::class),
-			DI\get(Application\Controllers\ProductFeed\KainosLt\Controller::class),
-			DI\get(Application\Controllers\ProductFeed\KainotekaLt\Controller::class)
+			DI\get(Presentation\Presenters\Feed\Kaina24Lt\Presenter::class),
+			//DI\get(Application\Controllers\ProductFeed\KainosLt\Controller::class),
+			//DI\get(Application\Controllers\ProductFeed\KainotekaLt\Controller::class)
 		),
-	*/
 
 	wpdb::class => DI\factory(function (): wpdb {
 		global $wpdb;
