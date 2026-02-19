@@ -5,22 +5,22 @@ WITH RECURSIVE cte_term_taxonomy AS (
 		term_taxonomy.taxonomy,
 		term_taxonomy.parent,
 
-		CAST(terms.slug AS CHAR(500)) AS path
+		terms.name,
+
+		CONCAT('/', terms.slug, '/') AS path
 
 	FROM wp_term_taxonomy AS term_taxonomy
 
 	JOIN wp_terms AS terms
 		ON terms.term_id = term_taxonomy.term_id
 
-	LEFT JOIN wp_termmeta AS termmeta
-		ON termmeta.term_id = terms.term_id
-		AND termmeta.meta_key = 'product_feeds'
-		AND termmeta.meta_value = 'excluded'
+	WHERE term_taxonomy.parent = 0
+		AND term_taxonomy.taxonomy IN (
+			'product_brand',
+			'product_cat'
+		)
 
-	WHERE termmeta.meta_id IS NULL
-		AND term_taxonomy.parent = 0
-
-	UNION ALL
+	UNION
 
 	SELECT
 		term_taxonomy.term_taxonomy_id,
@@ -28,22 +28,17 @@ WITH RECURSIVE cte_term_taxonomy AS (
 		term_taxonomy.taxonomy,
 		term_taxonomy.parent,
 
-		CONCAT(cte_term_taxonomy.path, '/', terms.slug)
+		terms.name,
+
+		CONCAT(cte_term_taxonomy.path, terms.slug, '/') AS path
 
 	FROM wp_term_taxonomy AS term_taxonomy
 
 	JOIN wp_terms AS terms
 		ON terms.term_id = term_taxonomy.term_id
 
-	LEFT JOIN wp_termmeta AS termmeta
-		ON termmeta.term_id = terms.term_id
-		AND termmeta.meta_key = 'product_feeds'
-		AND termmeta.meta_value = 'excluded'
-
 	JOIN cte_term_taxonomy
-		ON cte_term_taxonomy.term_id = term_taxonomy.parent
-
-	WHERE termmeta.meta_id IS NULL
+		ON cte_term_taxonomy.term_taxonomy_id = term_taxonomy.parent
 ),
 
 

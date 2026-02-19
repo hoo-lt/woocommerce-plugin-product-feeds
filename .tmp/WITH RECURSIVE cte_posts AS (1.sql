@@ -1,35 +1,22 @@
-WITH cte_term_relationships AS (
-	SELECT DISTINCT
-		term_relationships.object_id
-
-	FROM :term_relationships AS term_relationships
-
-	:WHERE
-),
-
-cte_posts AS (
+WITH RECURSIVE cte_posts AS (
 	SELECT
 		posts.ID,
 		posts.post_title,
 		posts.post_name
 
-	FROM :posts AS posts
+	FROM wp_posts AS posts
 
-	JOIN :term_relationships AS term_relationships
+	JOIN wp_term_relationships AS term_relationships
 		ON term_relationships.object_id = posts.ID
-	JOIN :term_taxonomy AS term_taxonomy
+	JOIN wp_term_taxonomy AS term_taxonomy
 		ON term_taxonomy.term_taxonomy_id = term_relationships.term_taxonomy_id
 		AND term_taxonomy.taxonomy = 'product_type'
-	JOIN :terms AS terms
+	JOIN wp_terms AS terms
 		ON terms.term_id = term_taxonomy.term_id
 		AND terms.slug = 'simple'
 
-	LEFT JOIN cte_term_relationships
-		ON cte_term_relationships.object_id = posts.ID
-
 	WHERE posts.post_type = 'product'
 		AND posts.post_status = 'publish'
-		AND cte_term_relationships.object_id IS NULL
 ),
 
 cte_terms AS (
@@ -42,11 +29,11 @@ cte_terms AS (
 
 	FROM cte_posts AS posts
 
-	STRAIGHT_JOIN :term_relationships AS term_relationships
+	STRAIGHT_JOIN wp_term_relationships AS term_relationships
 		ON term_relationships.object_id = posts.ID
-	STRAIGHT_JOIN :term_taxonomy AS term_taxonomy
+	STRAIGHT_JOIN wp_term_taxonomy AS term_taxonomy
 		ON term_taxonomy.term_taxonomy_id = term_relationships.term_taxonomy_id
-	STRAIGHT_JOIN :terms AS terms
+	STRAIGHT_JOIN wp_terms AS terms
 		ON terms.term_id = term_taxonomy.term_id
 
 	WHERE term_taxonomy.taxonomy IN (
@@ -61,7 +48,7 @@ cte_woocommerce_attribute_taxonomies AS (
 		CONCAT('pa_', woocommerce_attribute_taxonomies.attribute_name) AS attribute_name,
 		woocommerce_attribute_taxonomies.attribute_label
 
-	FROM :woocommerce_attribute_taxonomies AS woocommerce_attribute_taxonomies
+	FROM wp_woocommerce_attribute_taxonomies AS woocommerce_attribute_taxonomies
 ),
 
 cte_attribute AS (
@@ -77,11 +64,11 @@ cte_attribute AS (
 
 	FROM cte_posts AS posts
 
-	STRAIGHT_JOIN :term_relationships AS term_relationships
+	STRAIGHT_JOIN wp_term_relationships AS term_relationships
 		ON term_relationships.object_id = posts.ID
-	STRAIGHT_JOIN :term_taxonomy AS term_taxonomy
+	STRAIGHT_JOIN wp_term_taxonomy AS term_taxonomy
 		ON term_taxonomy.term_taxonomy_id = term_relationships.term_taxonomy_id
-	STRAIGHT_JOIN :terms AS terms
+	STRAIGHT_JOIN wp_terms AS terms
 		ON terms.term_id = term_taxonomy.term_id
 	STRAIGHT_JOIN cte_woocommerce_attribute_taxonomies AS woocommerce_attribute_taxonomies
 		ON woocommerce_attribute_taxonomies.attribute_name = term_taxonomy.taxonomy
@@ -109,14 +96,14 @@ SELECT
 
 FROM cte_posts AS posts
 
-JOIN :postmeta AS price
+JOIN wp_postmeta AS price
 	ON price.post_id = posts.ID
 	AND price.meta_key = '_price'
 
-LEFT JOIN :postmeta AS stock
+LEFT JOIN wp_postmeta AS stock
 	ON stock.post_id = posts.ID
 	AND stock.meta_key = '_stock'
-LEFT JOIN :postmeta AS gtin
+LEFT JOIN wp_postmeta AS gtin
 	ON gtin.post_id = posts.ID
 	AND gtin.meta_key = '_global_unique_id'
 LEFT JOIN cte_terms AS brand
