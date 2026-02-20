@@ -53,12 +53,12 @@ $containerBuilder->addDefinitions([
 		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
 		->constructorParameter('permalink', get_option('woocommerce_permalinks')['tag_base'] ?? ''),
 
-	Infrastructure\Hooks\ActionHooks::class => DI\create()
-		->constructor(
-			DI\get(Presentation\Presenters\Feed\Kaina24Lt\Presenter::class),
-			//DI\get(Application\Controllers\ProductFeed\KainosLt\Controller::class),
-			//DI\get(Application\Controllers\ProductFeed\KainotekaLt\Controller::class)
-		),
+	Infrastructure\Hooks\ActionHooks::class => DI\factory(fn(DI\Container $container) => new Infrastructure\Hooks\ActionHooks(...[
+		...[
+			$container->get(Presentation\Presenters\Feed\Kaina24Lt\Presenter::class),
+		],
+		...apply_filters('woocommerce_product_feeds_add_feed_presenters', []),
+	])),
 
 	wpdb::class => DI\factory(function (): wpdb {
 		global $wpdb;
