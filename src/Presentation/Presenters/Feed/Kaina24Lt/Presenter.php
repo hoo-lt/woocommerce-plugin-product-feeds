@@ -24,14 +24,10 @@ class Presenter implements Presentation\Presenters\Feed\PresenterInterface
 	{
 		header('Content-Type: application/xml; charset=utf-8');
 
-		$brands = $this->brandRepository->all();
-		$categories = $this->categoryRepository->all();
-		$products = $this->productRepository->all();
-
 		return $this->kaina24LtMappers->all(
-			$brands,
-			$categories,
-			$products,
+			$this->brandRepository->all(),
+			$this->categoryRepository->all(),
+			$this->productRepository->all(),
 		);
 	}
 }
