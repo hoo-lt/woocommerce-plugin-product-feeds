@@ -41,6 +41,18 @@ $containerBuilder->addDefinitions([
 
 	Infrastructure\Database\DatabaseInterface::class => DI\get(Infrastructure\Database\Database::class),
 
+	Infrastructure\Database\Queries\Select\Brand\Query::class => DI\autowire()
+		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
+		->constructorParameter('permalink', get_option('woocommerce_brand_permalink') ?? ''),
+
+	Infrastructure\Database\Queries\Select\Category\Query::class => DI\autowire()
+		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
+		->constructorParameter('permalink', get_option('woocommerce_permalinks')['category_base'] ?? ''),
+
+	Infrastructure\Database\Queries\Select\Tag\Query::class => DI\autowire()
+		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
+		->constructorParameter('permalink', get_option('woocommerce_permalinks')['tag_base'] ?? ''),
+
 	Infrastructure\Hooks\ActionHooks::class => DI\create()
 		->constructor(
 			DI\get(Presentation\Presenters\Feed\Kaina24Lt\Presenter::class),

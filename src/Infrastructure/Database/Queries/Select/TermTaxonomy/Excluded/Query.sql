@@ -1,4 +1,4 @@
-WITH RECURSIVE cte AS (
+WITH RECURSIVE cte_term_taxonomy AS (
 	SELECT
 		term_taxonomy.term_taxonomy_id
 
@@ -17,11 +17,18 @@ WITH RECURSIVE cte AS (
 
 	FROM :term_taxonomy AS term_taxonomy
 
-	JOIN cte
-		ON cte.term_taxonomy_id = term_taxonomy.parent
+	JOIN cte_term_taxonomy
+		ON cte_term_taxonomy.term_taxonomy_id = term_taxonomy.parent
 )
 
 SELECT DISTINCT
-	term_taxonomy.term_taxonomy_id
+	term_relationships.object_id
 
-FROM cte AS term_taxonomy
+FROM :term_relationships AS term_relationships
+
+WHERE term_relationships.term_taxonomy_id NOT IN (
+	SELECT
+		cte_term_taxonomy.term_taxonomy_id
+
+	FROM cte_term_taxonomy
+)

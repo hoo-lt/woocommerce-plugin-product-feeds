@@ -1,13 +1,4 @@
-WITH cte_term_relationships AS (
-	SELECT DISTINCT
-		term_relationships.object_id
-
-	FROM :term_relationships AS term_relationships
-
-	:WHERE
-),
-
-cte_posts AS (
+WITH cte_posts AS (
 	SELECT
 		posts.ID,
 		posts.post_title,
@@ -24,12 +15,11 @@ cte_posts AS (
 		ON terms.term_id = term_taxonomy.term_id
 		AND terms.slug = 'simple'
 
-	LEFT JOIN cte_term_relationships
-		ON cte_term_relationships.object_id = posts.ID
-
 	WHERE posts.post_type = 'product'
 		AND posts.post_status = 'publish'
-		AND cte_term_relationships.object_id IS NULL
+		AND posts.ID IN (
+			...
+		)
 ),
 
 cte_term_taxonomy AS (
