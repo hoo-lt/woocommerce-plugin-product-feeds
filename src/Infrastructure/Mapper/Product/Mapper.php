@@ -7,6 +7,16 @@ use Hoo\ProductFeeds\Domain;
 
 class Mapper
 {
+	protected readonly Http\Url $url;
+
+	public function __construct(
+		string $url,
+		string $path,
+	) {
+		$this->url = Http\Url::from($url)
+			->withPath($path);
+	}
+
 	public function all(array $table): Domain\Products
 	{
 		$products = new Domain\Products();
@@ -14,7 +24,7 @@ class Mapper
 		foreach ($table as [
 			'id' => $id,
 			'name' => $name,
-			'url' => $url,
+			'path' => $path,
 			'price' => $price,
 			'stock' => $stock,
 			'gtin' => $gtin,
@@ -34,7 +44,7 @@ class Mapper
 				$product = new Domain\Products\Product(
 					$id,
 					$name,
-					Http\Url::from($url),
+					$this->url->withPath("{$this->url->path()}/{$path}"),
 					$price,
 					$stock,
 					$gtin,
@@ -47,53 +57,44 @@ class Mapper
 					'pa_' => '',
 				]);
 
-				$attributeSlug = new Domain\Products\Product\Attributes\Attribute\Slug(
+				$attributeSlug = new Domain\Products\Product\AttributeSlugs\AttributeSlug(
 					$attributeSlug,
 				);
 
-				if ($product->attributes->has($attributeSlug)) {
-					$attribute = $product->attributes->get($attributeSlug);
+				if ($product->attributeSlugs->has($attributeSlug)) {
+					$attributeSlug = $product->attributeSlugs->get($attributeSlug);
 				} else {
-					$attribute = new Domain\Products\Product\Attributes\Attribute(
-						$attributeSlug,
-					);
-					$product->attributes->add($attribute);
+					$product->attributeSlugs->add($attributeSlug);
 				}
 
 				if ($termId) {
-					$termId = new Domain\Products\Product\Attributes\Attribute\Terms\Term\Id(
+					$termId = new Domain\Products\Product\AttributeSlugs\AttributeSlug\TermIds\TermId(
 						$termId,
 					);
 
-					if (!$attribute->terms->has($termId)) {
-						$attribute->terms->add(new Domain\Products\Product\Attributes\Attribute\Terms\Term(
-							$termId,
-						));
+					if (!$attributeSlug->termIds->has($termId)) {
+						$attributeSlug->termIds->add($termId);
 					}
 				}
 			}
 
 			if ($brandId) {
-				$brandId = new Domain\Products\Product\Brands\Brand\Id(
+				$brandId = new Domain\Products\Product\BrandIds\BrandId(
 					$brandId,
 				);
 
-				if (!$product->brands->has($brandId)) {
-					$product->brands->add(new Domain\Products\Product\Brands\Brand(
-						$brandId,
-					));
+				if (!$product->brandIds->has($brandId)) {
+					$product->brandIds->add($brandId);
 				}
 			}
 
 			if ($categoryId) {
-				$categoryId = new Domain\Products\Product\Categories\Category\Id(
+				$categoryId = new Domain\Products\Product\CategoryIds\CategoryId(
 					$categoryId,
 				);
 
-				if (!$product->categories->has($categoryId)) {
-					$product->categories->add(new Domain\Products\Product\Categories\Category(
-						$categoryId,
-					));
+				if (!$product->categoryIds->has($categoryId)) {
+					$product->categoryIds->add($categoryId);
 				}
 			}
 

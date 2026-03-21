@@ -9,18 +9,18 @@ class Attribute implements Collection\Item\ItemInterface
 	public Attribute\Terms $terms;
 
 	public function __construct(
-		protected readonly Attribute\Slug $slug,
+		protected readonly Attribute\Name $name,
 	) {
 		$this->terms = new Attribute\Terms();
 	}
 
-	public function slug(): string
+	public function name(): string
 	{
-		return ($this->slug)();
+		return ($this->name)();
 	}
 
 	public function key(): Collection\Item\Key\KeyInterface
 	{
-		return $this->slug;
+		return $this->name;
 	}
 }

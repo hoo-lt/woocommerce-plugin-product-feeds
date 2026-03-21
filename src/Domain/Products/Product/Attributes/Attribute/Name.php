@@ -4,15 +4,15 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\Attributes\Attribute;
 
 use Hoo\WordPressPluginFramework\Collection;
 
-readonly class Slug implements Collection\Item\Key\KeyInterface
+readonly class Name implements Collection\Item\Key\KeyInterface
 {
 	public function __construct(
-		protected string $slug,
+		protected string $name,
 	) {
 	}
 
-	public function __invoke(): int|string
+	public function __invoke(): string
 	{
-		return $this->slug;
+		return $this->name;
 	}
 }

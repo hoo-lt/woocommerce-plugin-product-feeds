@@ -7,6 +7,16 @@ use Hoo\ProductFeeds\Domain;
 
 class Mapper
 {
+	protected readonly Http\Url $url;
+
+	public function __construct(
+		string $url,
+		string $path,
+	) {
+		$this->url = Http\Url::from($url)
+			->withPath($path);
+	}
+
 	public function all(array $table): Domain\Categories
 	{
 		$categories = new Domain\Categories();
@@ -15,7 +25,7 @@ class Mapper
 			'id' => $id,
 			'parent_id' => $parentId,
 			'name' => $name,
-			'url' => $url,
+			'path' => $path,
 		]) {
 			$id = new Domain\Categories\Category\Id(
 				$id
@@ -33,7 +43,7 @@ class Mapper
 				$id,
 				$parentId,
 				$name,
-				Http\Url::from($url),
+				$this->url->withPath("{$this->url->path()}/{$path}"),
 			));
 		}
 

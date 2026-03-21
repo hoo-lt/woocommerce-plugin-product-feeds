@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\ProductFeeds\Infrastructure\Database\Query\Select\Brand;
+namespace Hoo\ProductFeeds\Infrastructure\Database\Query\Select\Term;
 
 use Hoo\WordPressPluginFramework\Database\Query\Select\QueryInterface;
 
@@ -12,8 +12,6 @@ class Query implements QueryInterface
 
 	public function __construct(
 		protected readonly wpdb $wpdb,
-		protected readonly string $homeUrl,
-		protected readonly string $permalink,
 		protected readonly string $path = __DIR__,
 	) {
 		$this->initialize();
@@ -21,10 +19,7 @@ class Query implements QueryInterface
 
 	public function __invoke(): string
 	{
-		return $this->wpdb->prepare($this->query, [
-			$this->homeUrl,
-			$this->permalink,
-		]);
+		return $this->wpdb->prepare($this->query);
 	}
 
 	protected function initialize(): void
@@ -35,7 +30,6 @@ class Query implements QueryInterface
 		}
 
 		$this->query = strtr(file_get_contents($path), [
-			':term_taxonomy' => $this->wpdb->term_taxonomy,
 			':terms' => $this->wpdb->terms,
 		]);
 	}

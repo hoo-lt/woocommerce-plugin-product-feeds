@@ -10,13 +10,13 @@ class Repository implements Domain\Repository\Brand\RepositoryInterface
 {
 	public function __construct(
 		protected readonly DatabaseInterface $database,
-		protected readonly Infrastructure\Database\Query\Select\Brand\Query $selectBrandQuery,
+		protected readonly Infrastructure\Database\Query\Select\Term\Query $selectTermQuery,
 		protected readonly Infrastructure\Mapper\Brand\Mapper $brandMapper,
 	) {
 	}
 
 	public function all(): Domain\Brands
 	{
-		return $this->brandMapper->all($this->database->select($this->selectBrandQuery));
+		return $this->brandMapper->all($this->database->select($this->selectTermQuery));
 	}
 }

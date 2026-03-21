@@ -4,9 +4,10 @@ namespace Hoo\ProductFeeds\Presentation\Mapper\Feed\Kaina24Lt;
 
 use Hoo\WordPressPluginFramework\Http;
 use Hoo\ProductFeeds\Domain;
+use Hoo\ProductFeeds\Presentation;
 use XMLWriter;
 
-class Mapper
+class Mapper implements Presentation\Mapper\Feed\MapperInterface
 {
 	public function __construct(
 		protected readonly XMLWriter $xmlWriter,
@@ -15,7 +16,15 @@ class Mapper
 	) {
 	}
 
-	public function all(
+	public function contentType(): string
+	{
+		return 'application/xml; charset=utf-8';
+		return [
+			'Content-Type: application/xml; charset=utf-8'
+		];
+	}
+
+	public function body(
 		Domain\Attributes $attributes,
 		Domain\Brands $brands,
 		Domain\Categories $categories,

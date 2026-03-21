@@ -10,13 +10,13 @@ class Repository implements Domain\Repository\Category\RepositoryInterface
 {
 	public function __construct(
 		protected readonly DatabaseInterface $database,
-		protected readonly Infrastructure\Database\Query\Select\Category\Query $selectCategoryQuery,
+		protected readonly Infrastructure\Database\Query\Select\Term\Query $selectTermQuery,
 		protected readonly Infrastructure\Mapper\Category\Mapper $categoryMapper,
 	) {
 	}
 
 	public function all(): Domain\Categories
 	{
-		return $this->categoryMapper->all($this->database->select($this->selectCategoryQuery));
+		return $this->categoryMapper->all($this->database->select($this->selectTermQuery));
 	}
 }

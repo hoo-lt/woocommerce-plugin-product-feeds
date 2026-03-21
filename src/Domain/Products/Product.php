@@ -8,9 +8,10 @@ use Hoo\WordPressPluginFramework\Http;
 class Product implements Collection\Item\ItemInterface
 {
 	public Product\Attributes $attributes;
-	public Product\Brands $brands;
-	public Product\Categories $categories;
-	public Product\Tags $tags;
+	public Product\AttributeSlugs $attributeSlugs;
+	public Product\BrandIds $brandIds;
+	public Product\CategoryIds $categoryIds;
+	public Product\TagIds $tagIds;
 
 	public function __construct(
 		protected readonly Product\Id $id,
@@ -21,9 +22,10 @@ class Product implements Collection\Item\ItemInterface
 		public ?string $gtin,
 	) {
 		$this->attributes = new Product\Attributes();
-		$this->brands = new Product\Brands();
-		$this->categories = new Product\Categories();
-		$this->tags = new Product\Tags();
+		$this->attributeSlugs = new Product\AttributeSlugs();
+		$this->brandIds = new Product\BrandIds();
+		$this->categoryIds = new Product\CategoryIds();
+		$this->tagIds = new Product\TagIds();
 	}
 
 	public function id(): int

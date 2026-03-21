@@ -57,21 +57,34 @@ $containerBuilder->addDefinitions([
 	Domain\Repository\Term\RepositoryInterface::class => DI\get(Infrastructure\Repository\Term\Repository::class),
 	Domain\Repository\TermMeta\RepositoryInterface::class => DI\get(Infrastructure\Repository\TermMeta\Repository::class),
 
-	Infrastructure\Database\Query\Select\Brand\Query::class => DI\autowire()
-		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
-		->constructorParameter('permalink', trim(get_option('woocommerce_brand_permalink'), '/') ?? ''),
+	Domain\Repository\Brand\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Brand\Repository::class)
+		->constructorParameter('selectTermQuery', DI\create(Infrastructure\Database\Query\Select\Term\Query::class)
+			->constructorParameter('taxonomy', Domain\Taxonomy::Brand)),
 
-	Infrastructure\Database\Query\Select\Category\Query::class => DI\autowire()
-		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
-		->constructorParameter('permalink', trim(get_option('woocommerce_permalinks')['category_base'], '/') ?? ''),
+	Domain\Repository\Category\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Category\Repository::class)
+		->constructorParameter('selectTermQuery', DI\create(Infrastructure\Database\Query\Select\Term\Query::class)
+			->constructorParameter('taxonomy', Domain\Taxonomy::Category)),
+
+	Domain\Repository\Tag\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Tag\Repository::class)
+		->constructorParameter('selectTermQuery', DI\create(Infrastructure\Database\Query\Select\Term\Query::class)
+			->constructorParameter('taxonomy', Domain\Taxonomy::Tag)),
+
+	Infrastructure\Database\Query\Select\TermRelationship\Query::class => DI\autowire()
+		->constructorParameter('termMeta', Domain\TermMeta::Excluded),
+
+	Infrastructure\Mapper\Brand\Mapper::class => DI\autowire()
+		->constructorParameter('url', site_url())
+		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_brand_permalink'), '/') ?? ''),
+	Infrastructure\Mapper\Category\Mapper::class => DI\autowire()
+		->constructorParameter('url', site_url())
+		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_permalinks')['category_base'], '/') ?? ''),
+	Infrastructure\Mapper\Tag\Mapper::class => DI\autowire()
+		->constructorParameter('url', site_url())
+		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_permalinks')['tag_base'], '/') ?? ''),
 
 	Infrastructure\Database\Query\Select\Product\Simple\Query::class => DI\autowire()
 		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
 		->constructorParameter('permalink', trim(get_option('woocommerce_permalinks')['product_base'], '/') ?? ''),
-
-	Infrastructure\Database\Query\Select\Tag\Query::class => DI\autowire()
-		->constructorParameter('homeUrl', rtrim(home_url(), '/'))
-		->constructorParameter('permalink', trim(get_option('woocommerce_permalinks')['tag_base'], '/') ?? ''),
 
 	Infrastructure\Hook\Action\Hook::class => DI\factory(function (DI\Container $container) {
 		$pipeline = $container->get(WordPressPluginFramework\Pipeline\PipelineInterface::class);

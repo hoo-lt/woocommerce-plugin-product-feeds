@@ -4,15 +4,15 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\Attributes\Attribute\Terms\Te
 
 use Hoo\WordPressPluginFramework\Collection;
 
-readonly class Id implements Collection\Item\Key\KeyInterface
+readonly class Name implements Collection\Item\Key\KeyInterface
 {
 	public function __construct(
-		protected int $id,
+		protected int $name,
 	) {
 	}
 
-	public function __invoke(): int|string
+	public function __invoke(): string
 	{
-		return $this->id;
+		return $this->name;
 	}
 }

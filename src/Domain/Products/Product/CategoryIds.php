@@ -4,30 +4,30 @@ namespace Hoo\ProductFeeds\Domain\Products\Product;
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class Attributes extends Collection\AbstractCollection
+class CategoryIds extends Collection\AbstractCollection
 {
 	public function __construct(
-		Attributes\Attribute ...$items,
+		CategoryIds\CategoryId ...$items,
 	) {
 		$this->items = $items;
 	}
 
-	public function get(Collection\Item\Key\KeyInterface $key): ?Attributes\Attribute
+	public function get(Collection\Item\Key\KeyInterface $key): ?CategoryIds\CategoryId
 	{
 		return parent::get($key);
 	}
 
-	public function first(): ?Attributes\Attribute
+	public function first(): ?CategoryIds\CategoryId
 	{
 		return parent::first();
 	}
 
-	public function last(): ?Attributes\Attribute
+	public function last(): ?CategoryIds\CategoryId
 	{
 		return parent::last();
 	}
 
-	public function add(Attributes\Attribute $item): void
+	public function add(CategoryIds\CategoryId $item): void
 	{
 		$key = $item->key();
 		if ($this->has($key)) {
