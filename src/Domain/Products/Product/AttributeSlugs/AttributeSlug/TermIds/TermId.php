@@ -4,7 +4,7 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\AttributeSlugs\AttributeSlug\
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class TermId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
+readonly class TermId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
 {
 	public function __construct(
 		protected int $id,

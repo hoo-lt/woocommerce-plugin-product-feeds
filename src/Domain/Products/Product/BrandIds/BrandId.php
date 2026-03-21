@@ -4,7 +4,7 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\BrandIds;
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class BrandId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
+readonly class BrandId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
 {
 	public function __construct(
 		protected int $id,

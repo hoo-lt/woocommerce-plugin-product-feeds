@@ -4,7 +4,7 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\CategoryIds;
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class CategoryId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
+readonly class CategoryId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
 {
 	public function __construct(
 		protected int $id,

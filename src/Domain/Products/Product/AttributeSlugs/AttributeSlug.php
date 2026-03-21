@@ -4,7 +4,7 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\AttributeSlugs;
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class AttributeSlug implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
+readonly class AttributeSlug implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
 {
 	public AttributeSlug\TermIds $termIds;
 

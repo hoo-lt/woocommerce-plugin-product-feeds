@@ -4,7 +4,7 @@ namespace Hoo\ProductFeeds\Domain\Products\Product\TagIds;
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class TagId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
+readonly class TagId implements Collection\Item\ItemInterface, Collection\Item\Key\KeyInterface
 {
 	public function __construct(
 		protected int $id,
