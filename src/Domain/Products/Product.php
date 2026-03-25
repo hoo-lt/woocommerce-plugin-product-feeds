@@ -15,6 +15,7 @@ class Product implements Collection\Item\ItemInterface
 
 	public function __construct(
 		protected readonly Product\Id $id,
+		protected ?Product\Id $parentId,
 		public string $name,
 		public Http\UrlInterface $url,
 		public float $price,
@@ -31,6 +32,11 @@ class Product implements Collection\Item\ItemInterface
 	public function id(): int
 	{
 		return ($this->id)();
+	}
+
+	public function parentId(): ?int
+	{
+		return $this->parentId ? ($this->parentId)() : null;
 	}
 
 	public function key(): Collection\Item\Key\KeyInterface

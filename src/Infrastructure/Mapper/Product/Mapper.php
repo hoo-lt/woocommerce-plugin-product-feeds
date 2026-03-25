@@ -23,6 +23,7 @@ class Mapper
 
 		foreach ($table as [
 			'id' => $id,
+			'parent_id' => $parentId,
 			'name' => $name,
 			'path' => $path,
 			'price' => $price,
@@ -38,12 +39,16 @@ class Mapper
 			$id = new Domain\Products\Product\Id(
 				$id,
 			);
+			$parentId = new Domain\Products\Product\Id(
+				$parentId,
+			);
 
 			if ($products->has($id)) {
 				$product = $products->get($id);
 			} else {
 				$product = new Domain\Products\Product(
 					$id,
+					$parentId,
 					$name,
 					$this->url->withPath("{$this->url->path()}/{$path}"),
 					$price,
