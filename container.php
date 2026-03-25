@@ -9,9 +9,9 @@ use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 
 $containerBuilder = new DI\ContainerBuilder();
 $containerBuilder->addDefinitions([
-	/**
-	 * WordPress Plugin Framework
-	 */
+		/**
+		 * WordPress Plugin Framework
+		 */
 	WordPressPluginFramework\Cache\CacheInterface::class => DI\get(WordPressPluginFramework\Cache\Cache::class),
 	WordPressPluginFramework\Database\DatabaseInterface::class => DI\get(WordPressPluginFramework\Database\Database::class),
 	WordPressPluginFramework\Pipeline\PipelineInterface::class => DI\get(WordPressPluginFramework\Pipeline\Pipeline::class),
@@ -27,9 +27,9 @@ $containerBuilder->addDefinitions([
 		$_POST,
 	)),
 
-	/**
-	 * Repositories
-	 */
+		/**
+		 * Repositories
+		 */
 	Domain\Repository\Attribute\RepositoryInterface::class => DI\get(Infrastructure\Repository\Attribute\Repository::class),
 	Domain\Repository\Brand\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Brand\Repository::class)
 		->constructorParameter(
@@ -68,21 +68,45 @@ $containerBuilder->addDefinitions([
 			Domain\TermMeta::Excluded
 		),
 
-	/**
-	 * Mappers
-	 */
+		/**
+		 * Mappers
+		 */
 	Infrastructure\Mapper\Brand\Mapper::class => DI\autowire()
-		->constructorParameter('url', site_url())
-		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_brand_permalink'), '/') ?? ''),
+		->constructorParameter(
+			'url',
+			site_url()
+		)
+		->constructorParameter(
+			'path',
+			'/' . ltrim(get_option('woocommerce_brand_permalink'), '/') ?? ''
+		),
 	Infrastructure\Mapper\Category\Mapper::class => DI\autowire()
-		->constructorParameter('url', site_url())
-		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_permalinks')['category_base'], '/') ?? ''),
+		->constructorParameter(
+			'url',
+			site_url()
+		)
+		->constructorParameter(
+			'path',
+			'/' . ltrim(get_option('woocommerce_permalinks')['category_base'], '/') ?? ''
+		),
 	Infrastructure\Mapper\Product\Mapper::class => DI\autowire()
-		->constructorParameter('url', site_url())
-		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_permalinks')['product_base'], '/') ?? ''),
+		->constructorParameter(
+			'url',
+			site_url()
+		)
+		->constructorParameter(
+			'path',
+			'/' . ltrim(get_option('woocommerce_permalinks')['product_base'], '/') ?? ''
+		),
 	Infrastructure\Mapper\Tag\Mapper::class => DI\autowire()
-		->constructorParameter('url', site_url())
-		->constructorParameter('path', '/' . ltrim(get_option('woocommerce_permalinks')['tag_base'], '/') ?? ''),
+		->constructorParameter(
+			'url',
+			site_url()
+		)
+		->constructorParameter(
+			'path',
+			'/' . ltrim(get_option('woocommerce_permalinks')['tag_base'], '/') ?? ''
+		),
 
 	/**
 	 * Hooks
