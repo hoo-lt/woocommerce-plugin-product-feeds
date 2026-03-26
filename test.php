@@ -1,5 +1,6 @@
 <?php
 
+use Hoo\WordPressPluginFramework\Database\DatabaseInterface;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 use Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure;
 use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
@@ -18,6 +19,7 @@ $containerBuilder->addDefinitions($definitions);
 
 $container = $containerBuilder->build();
 
-$repository = $container->get(Infrastructure\Repository\Attribute\Repository::class);
+$database = $container->get(DatabaseInterface::class);
+$query = $container->get(Infrastructure\Database\Query\Select\Product\Simple\Query::class);
 
-print_r($repository->all());
+print_r($database->json($query->withStatuses(Domain\Post\Status::Publish)));

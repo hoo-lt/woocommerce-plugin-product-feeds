@@ -82,7 +82,15 @@ SELECT
 	tag.term_id AS tag_id,
 
 	COALESCE(cte_attribute_pa.attribute_slug, cte_pa.attribute_slug) AS attribute_slug,
-	COALESCE(cte_attribute_pa.term_slug, cte_pa.term_slug) AS term_slug
+	COALESCE(cte_attribute_pa.term_slug, cte_pa.term_slug) AS term_slug,
+
+CASE
+	WHEN cte_attribute_pa.term_slug IS NULL
+		THEN FALSE
+	WHEN cte_attribute_pa.term_slug = cte_pa.term_slug
+		THEN TRUE
+	ELSE NULL
+END AS attribute_is_variable
 
 FROM cte_posts
 

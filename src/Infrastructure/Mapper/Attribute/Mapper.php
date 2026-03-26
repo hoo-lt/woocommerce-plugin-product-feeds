@@ -6,41 +6,33 @@ use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 
 class Mapper
 {
-	public function all(array $table): Domain\Attributes
+	public function all(array $json): Domain\Attributes
 	{
 		$attributes = new Domain\Attributes();
 
-		foreach ($table as [
-			'attribute_name' => $attributeName,
-			'attribute_slug' => $attributeSlug,
-			'term_name' => $termName,
-			'term_slug' => $termSlug,
+		foreach ($json as [
+			'name' => $name,
+			'slug' => $slug,
+			'terms' => $terms,
 		]) {
-			$attributeSlug = new Domain\Attributes\Attribute\Slug(
-				$attributeSlug,
+			$attribute = new Domain\Attributes\Attribute(
+				new Domain\Attributes\Attribute\Slug(
+					$slug,
+				),
+				$name,
 			);
 
-			if ($attributes->has($attributeSlug)) {
-				$attribute = $attributes->get($attributeSlug);
-			} else {
-				$attribute = new Domain\Attributes\Attribute(
-					$attributeSlug,
-					$attributeName,
-				);
+			$attributes->add($attribute);
 
-				$attributes->add($attribute);
-			}
-
-			$termSlug = new Domain\Attributes\Attribute\Terms\Term\Slug(
-				$termSlug,
-			);
-
-			if ($attribute->terms->has($attributeSlug)) {
-				$term = $attribute->terms->get($attributeSlug);
-			} else {
+			foreach ($terms as [
+				'name' => $name,
+				'slug' => $slug,
+			]) {
 				$term = new Domain\Attributes\Attribute\Terms\Term(
-					$termSlug,
-					$termName,
+					new Domain\Attributes\Attribute\Terms\Term\Slug(
+						$slug,
+					),
+					$name,
 				);
 
 				$attribute->terms->add($term);

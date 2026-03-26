@@ -17,6 +17,6 @@ readonly class Repository implements Domain\Repository\Attribute\RepositoryInter
 
 	public function all(): Domain\Attributes
 	{
-		return $this->attributeMapper->all($this->database->select($this->selectAttributeQuery));
+		return $this->attributeMapper->all($this->database->json($this->selectAttributeQuery));
 	}
 }

@@ -51,12 +51,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hoo-lt/wordpress-plugin-framework.git",
-                "reference": "7142108c9ba06bb12c2a1ba0b51d157baba722e6"
+                "reference": "c5084df5ca4107eac6af3b74e99405f92cda86e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hoo-lt/wordpress-plugin-framework/zipball/7142108c9ba06bb12c2a1ba0b51d157baba722e6",
-                "reference": "7142108c9ba06bb12c2a1ba0b51d157baba722e6",
+                "url": "https://api.github.com/repos/hoo-lt/wordpress-plugin-framework/zipball/c5084df5ca4107eac6af3b74e99405f92cda86e6",
+                "reference": "c5084df5ca4107eac6af3b74e99405f92cda86e6",
                 "shasum": ""
             },
             "default-branch": true,
@@ -79,7 +79,7 @@
                 "source": "https://github.com/hoo-lt/wordpress-plugin-framework/tree/main",
                 "issues": "https://github.com/hoo-lt/wordpress-plugin-framework/issues"
             },
-            "time": "2026-03-25T21:22:18+00:00"
+            "time": "2026-03-26T17:11:03+00:00"
         },
         {
             "name": "laravel/serializable-closure",
