@@ -6,7 +6,7 @@ use Hoo\WordPressPluginFramework\Collection;
 
 class Attribute implements Collection\Item\ItemInterface
 {
-	public Attribute\Terms $terms;
+	public readonly Attribute\Terms $terms;
 
 	public function __construct(
 		protected readonly Attribute\Name $name,

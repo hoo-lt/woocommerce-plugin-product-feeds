@@ -22,4 +22,13 @@ $container = $containerBuilder->build();
 $database = $container->get(DatabaseInterface::class);
 $query = $container->get(Infrastructure\Database\Query\Select\Product\Simple\Query::class);
 
-print_r($database->json($query->withStatuses(Domain\Post\Status::Publish)));
+$rows = $database->json($query->withStatuses(Domain\Post\Status::Publish));
+
+$mapper = new Infrastructure\Mapper\Product\Simple\Mapper(
+	site_url(),
+	'/' . ltrim(get_option('woocommerce_permalinks')['product_base'], '/'),
+);
+
+$products = $mapper->all($rows);
+
+print_r($products);

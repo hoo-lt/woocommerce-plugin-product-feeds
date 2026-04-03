@@ -49,7 +49,7 @@ term_ids AS (
 		term_taxonomy.taxonomy
 ),
 
-taxonomy_attributes AS (
+attributes AS (
 	SELECT
 		post_id,
 		COALESCE(
@@ -60,7 +60,7 @@ taxonomy_attributes AS (
 				)
 			),
 			JSON_ARRAY()
-		) AS taxonomy_attributes
+		) AS attributes
 
 	FROM (
 		SELECT
@@ -236,7 +236,7 @@ SELECT
 				'brand_ids', brand_ids,
 				'category_ids', category_ids,
 				'tag_ids', tag_ids,
-				'taxonomy_attributes', taxonomy_attributes
+				'attributes', attributes
 			)
 		),
 		JSON_ARRAY()
@@ -260,9 +260,9 @@ FROM (
 			JSON_ARRAY()
 		) AS tag_ids,
 		COALESCE(
-			taxonomy_attributes.taxonomy_attributes,
+			attributes.attributes,
 			JSON_ARRAY()
-		) AS taxonomy_attributes,
+		) AS attributes,
 		postmeta.regular_price,
 		postmeta.sale_price,
 		postmeta.sale_price_dates_from,
@@ -285,8 +285,8 @@ FROM (
 	LEFT JOIN term_ids AS tag_ids
 		ON tag_ids.post_id = posts.id
 		AND tag_ids.taxonomy = 'product_tag'
-	LEFT JOIN taxonomy_attributes
-		ON taxonomy_attributes.post_id = posts.id
+	LEFT JOIN attributes
+		ON attributes.post_id = posts.id
 	LEFT JOIN postmeta
 		ON postmeta.post_id = posts.id
 ) AS json
