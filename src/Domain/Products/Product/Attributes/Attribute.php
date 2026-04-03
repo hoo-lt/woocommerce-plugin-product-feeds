@@ -4,12 +4,14 @@ namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Products\Product\Attribute
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class Attribute implements Collection\Item\ItemInterface
+readonly class Attribute implements Collection\Item\ItemInterface
 {
-	public readonly Attribute\Terms $terms;
+	public Attribute\Terms $terms;
 
 	public function __construct(
-		protected readonly Attribute\Name $name,
+		protected Attribute\Name $name,
+		public bool $isVisible,
+		public bool $isVariation,
 	) {
 		$this->terms = new Attribute\Terms();
 	}

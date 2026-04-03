@@ -5,10 +5,10 @@ namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Brands;
 use Hoo\WordPressPluginFramework\Collection;
 use Hoo\WordPressPluginFramework\Http;
 
-class Brand implements Collection\Item\ItemInterface
+readonly class Brand implements Collection\Item\ItemInterface
 {
 	public function __construct(
-		protected readonly Brand\Id $id,
+		protected Brand\Id $id,
 		protected ?Brand\Id $parentId,
 		public string $name,
 		public Http\UrlInterface $url,

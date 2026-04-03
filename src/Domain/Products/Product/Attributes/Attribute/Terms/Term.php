@@ -4,10 +4,10 @@ namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Products\Product\Attribute
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class Term implements Collection\Item\ItemInterface
+readonly class Term implements Collection\Item\ItemInterface
 {
 	public function __construct(
-		protected readonly Term\Name $name,
+		protected Term\Name $name,
 	) {
 	}
 

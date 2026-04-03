@@ -5,10 +5,10 @@ namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Categories;
 use Hoo\WordPressPluginFramework\Collection;
 use Hoo\WordPressPluginFramework\Http;
 
-class Category implements Collection\Item\ItemInterface
+readonly class Category implements Collection\Item\ItemInterface
 {
 	public function __construct(
-		protected readonly Category\Id $id,
+		protected Category\Id $id,
 		protected ?Category\Id $parentId,
 		public string $name,
 		public Http\UrlInterface $url,

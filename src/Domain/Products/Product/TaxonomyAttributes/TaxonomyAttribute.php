@@ -4,12 +4,14 @@ namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Products\Product\TaxonomyA
 
 use Hoo\WordPressPluginFramework\Collection;
 
-class TaxonomyAttribute implements Collection\Item\ItemInterface
+readonly class TaxonomyAttribute implements Collection\Item\ItemInterface
 {
-	public readonly TaxonomyAttribute\Terms $terms;
+	public TaxonomyAttribute\Terms $terms;
 
 	public function __construct(
-		protected readonly TaxonomyAttribute\Slug $slug,
+		protected TaxonomyAttribute\Slug $slug,
+		public bool $isVisible,
+		public bool $isVariation,
 	) {
 		$this->terms = new TaxonomyAttribute\Terms();
 	}

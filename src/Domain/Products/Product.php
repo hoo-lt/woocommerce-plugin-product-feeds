@@ -5,17 +5,17 @@ namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Products;
 use Hoo\WordPressPluginFramework\Collection;
 use Hoo\WordPressPluginFramework\Http;
 
-class Product implements Collection\Item\ItemInterface
+readonly class Product implements Collection\Item\ItemInterface
 {
-	public readonly Product\Attributes $attributes;
-	public readonly Product\TaxonomyAttributes $taxonomyAttributes;
-	public readonly Product\BrandIds $brandIds;
-	public readonly Product\CategoryIds $categoryIds;
-	public readonly Product\TagIds $tagIds;
+	public Product\Attributes $attributes;
+	public Product\TaxonomyAttributes $taxonomyAttributes;
+	public Product\BrandIds $brandIds;
+	public Product\CategoryIds $categoryIds;
+	public Product\TagIds $tagIds;
 
 	public function __construct(
-		protected readonly Product\Id $id,
-		protected readonly ?Product\Id $parentId,
+		protected Product\Id $id,
+		protected ?Product\Id $parentId,
 		public string $name,
 		public Http\UrlInterface $url,
 		public Product\Price $price,

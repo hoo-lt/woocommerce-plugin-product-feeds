@@ -56,9 +56,13 @@ class Mapper
 				);
 			}
 
-			foreach (array_filter(unserialize($row['product_attributes']) ?: [], fn($productAttribute) => !$productAttribute['is_taxonomy']) as $productAttribute) {
+			$productAttributes = unserialize($row['product_attributes']) ?: [];
+
+			foreach (array_filter($productAttributes, fn($productAttribute) => !$productAttribute['is_taxonomy']) as $productAttribute) {
 				$attribute = new Domain\Products\Product\Attributes\Attribute(
 					new Domain\Products\Product\Attributes\Attribute\Name($productAttribute['name']),
+					(bool) $productAttribute['is_visible'],
+					(bool) $productAttribute['is_variation'],
 				);
 
 				foreach (array_filter(array_map(trim(...), explode('|', $productAttribute['value']))) as $value) {
@@ -73,8 +77,12 @@ class Mapper
 			}
 
 			foreach ($row['attributes'] as $attribute) {
+				$productAttribute = $productAttributes["pa_{$attribute['slug']}"] ?? [];
+
 				$taxonomyAttribute = new Domain\Products\Product\TaxonomyAttributes\TaxonomyAttribute(
 					new Domain\Products\Product\TaxonomyAttributes\TaxonomyAttribute\Slug($attribute['slug']),
+					(bool) ($productAttribute['is_visible'] ?? false),
+					(bool) ($productAttribute['is_variation'] ?? false),
 				);
 
 				foreach ($attribute['terms'] as $term) {
