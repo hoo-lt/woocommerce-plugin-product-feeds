@@ -25,10 +25,11 @@ class Mapper
 			$product = new Domain\Products\Product(
 				new Domain\Products\Product\Id($row['id']),
 				null,
-				$row['name'],
-				$row['description'],
-				$this->url->withPath("{$this->url->path()}/{$row['slug']}"),
 				Domain\Products\Product\Status::from($row['status']),
+				null,
+				$row['name'],
+				wp_strip_all_tags($row['description'], true),
+				$this->url->withPath("{$this->url->path()}/{$row['slug']}"),
 				new Domain\Products\Product\Price(
 					$row['price']['regular'],
 					$row['price']['sale'],
@@ -38,9 +39,8 @@ class Mapper
 				$row['sku'],
 				$row['gtin'],
 				new Domain\Products\Product\Stock(
-					Domain\Products\Product\Stock\Manage::from($row['stock']['manage']),
 					Domain\Products\Product\Stock\Status::from($row['stock']['status']),
-					$row['stock']['quantity'],
+					$row['stock']['manage'] === 'yes' ? $row['stock']['quantity'] : null,
 				),
 			);
 
@@ -74,7 +74,9 @@ class Mapper
 				);
 			}
 
-			$productAttributes = unserialize($row['product_attributes']) ?: [];
+			$productAttributes = unserialize($row['product_attributes'] ?? '', [
+				'allowed_classes' => false
+			]) ?: [];
 
 			foreach (array_filter($productAttributes, fn($productAttribute) => !$productAttribute['is_taxonomy']) as $productAttribute) {
 				$attribute = new Domain\Products\Product\Attributes\Attribute(
@@ -94,7 +96,7 @@ class Mapper
 			}
 
 			foreach ($row['attributes'] as $attribute) {
-				$productAttribute = $productAttributes["pa_{$attribute['slug']}"];
+				$productAttribute = $productAttributes["pa_{$attribute['slug']}"] ?? [];
 
 				$taxonomyAttribute = new Domain\Products\Product\TaxonomyAttributes\TaxonomyAttribute(
 					new Domain\Products\Product\TaxonomyAttributes\TaxonomyAttribute\Slug($attribute['slug']),

@@ -17,10 +17,11 @@ readonly class Product implements Collection\Item\ItemInterface
 	public function __construct(
 		protected Product\Id $id,
 		protected ?Product\Id $parentId,
+		public Product\Status $status,
+		public ?Product\Status $parentStatus,
 		public string $name,
 		public ?string $description,
 		public Http\UrlInterface $url,
-		public Product\Status $status,
 		public Product\Price $price,
 		public ?string $sku,
 		public ?string $gtin,

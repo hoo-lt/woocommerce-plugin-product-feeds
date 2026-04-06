@@ -3,7 +3,13 @@ WITH posts AS (
 		posts.ID AS id,
 		posts.post_parent AS parent_id,
 		parent_posts.post_title AS name,
-		parent_posts.post_name AS slug
+		posts.post_content AS description,
+		posts.post_excerpt AS short_description,
+		parent_posts.post_content AS parent_description,
+		parent_posts.post_excerpt AS parent_short_description,
+		parent_posts.post_name AS slug,
+		posts.post_status AS status,
+		parent_posts.post_status AS parent_status
 
 	FROM :posts AS posts
 
@@ -53,7 +59,7 @@ term_ids AS (
 		term_taxonomy.taxonomy
 ),
 
-taxonomy_attributes AS (
+attributes AS (
 	SELECT
 		post_id,
 		COALESCE(
@@ -64,7 +70,7 @@ taxonomy_attributes AS (
 				)
 			),
 			JSON_ARRAY()
-		) AS taxonomy_attributes
+		) AS attributes
 
 	FROM (
 		SELECT
@@ -97,7 +103,7 @@ taxonomy_attributes AS (
 		post_id
 ),
 
-parent_taxonomy_attributes AS (
+parent_attributes AS (
 	SELECT
 		post_id,
 		COALESCE(
@@ -108,7 +114,7 @@ parent_taxonomy_attributes AS (
 				)
 			),
 			JSON_ARRAY()
-		) AS parent_taxonomy_attributes
+		) AS parent_attributes
 
 	FROM (
 		SELECT
@@ -197,7 +203,13 @@ postmeta AS (
 				WHEN meta_key = '_global_unique_id'
 				THEN meta_value
 			END
-		) AS global_unique_id,
+		) AS gtin,
+		MAX(
+			CASE
+				WHEN meta_key = '_manage_stock'
+				THEN meta_value
+			END
+		) AS manage_stock,
 		CAST(
 			NULLIF(
 				MAX(
@@ -208,7 +220,7 @@ postmeta AS (
 				),
 				''
 			) AS SIGNED
-		) AS stock,
+		) AS stock_quantity,
 		MAX(
 			CASE
 				WHEN meta_key = '_stock_status'
@@ -225,7 +237,7 @@ postmeta AS (
 				),
 				''
 			) AS UNSIGNED
-		) AS thumbnail_id
+		) AS image_id
 
 	FROM :postmeta
 
@@ -238,6 +250,7 @@ postmeta AS (
 			'_sale_price_dates_from',
 			'_sale_price_dates_to',
 			'_global_unique_id',
+			'_manage_stock',
 			'_stock',
 			'_stock_status',
 			'_thumbnail_id'
@@ -255,7 +268,7 @@ parent_postmeta AS (
 				WHEN meta_key = '_global_unique_id'
 				THEN meta_value
 			END
-		) AS global_unique_id,
+		) AS gtin,
 		CAST(
 			NULLIF(
 				MAX(
@@ -266,7 +279,7 @@ parent_postmeta AS (
 				),
 				''
 			) AS SIGNED
-		) AS stock,
+		) AS stock_quantity,
 		MAX(
 			CASE
 				WHEN meta_key = '_stock_status'
@@ -283,7 +296,7 @@ parent_postmeta AS (
 				),
 				''
 			) AS UNSIGNED
-		) AS thumbnail_id,
+		) AS image_id,
 		NULLIF(
 			MAX(
 				CASE
@@ -292,7 +305,7 @@ parent_postmeta AS (
 				END
 			),
 			''
-		) AS product_image_gallery,
+		) AS image_ids,
 		MAX(
 			CASE
 				WHEN meta_key = '_product_attributes'
@@ -325,26 +338,20 @@ SELECT
 				'id', id,
 				'parent_id', parent_id,
 				'name', name,
-				'path', path,
-				'regular_price', regular_price,
-				'sale_price', sale_price,
-				'sale_price_dates_from', sale_price_dates_from,
-				'sale_price_dates_to', sale_price_dates_to,
-				'global_unique_id', global_unique_id,
-				'parent_global_unique_id', parent_global_unique_id,
+				'description', description,
+				'slug', slug,
+				'status', status,
+				'gtin', gtin,
+				'price', price,
 				'stock', stock,
 				'parent_stock', parent_stock,
-				'stock_status', stock_status,
-				'parent_stock_status', parent_stock_status,
-				'thumbnail_id', thumbnail_id,
-				'parent_thumbnail_id', parent_thumbnail_id,
-				'parent_product_image_gallery', parent_product_image_gallery,
+				'image_ids', image_ids,
 				'parent_product_attributes', parent_product_attributes,
 				'brand_ids', brand_ids,
 				'category_ids', category_ids,
 				'tag_ids', tag_ids,
-				'taxonomy_attributes', taxonomy_attributes,
-				'parent_taxonomy_attributes', parent_taxonomy_attributes
+				'attributes', attributes,
+				'parent_attributes', parent_attributes
 			)
 		),
 		JSON_ARRAY()
@@ -355,7 +362,14 @@ FROM (
 		posts.id,
 		posts.parent_id,
 		posts.name,
-		posts.slug AS path,
+		COALESCE(
+			NULLIF(posts.short_description, ''),
+			NULLIF(posts.description, ''),
+			posts.parent_short_description,
+			posts.parent_description
+		) AS description,
+		posts.slug,
+		posts.status,
 		COALESCE(
 			brand_ids.term_ids,
 			JSON_ARRAY()
@@ -369,28 +383,33 @@ FROM (
 			JSON_ARRAY()
 		) AS tag_ids,
 		COALESCE(
-			taxonomy_attributes.taxonomy_attributes,
+			attributes.attributes,
 			JSON_ARRAY()
-		) AS taxonomy_attributes,
+		) AS attributes,
 		COALESCE(
-			parent_taxonomy_attributes.parent_taxonomy_attributes,
+			parent_attributes.parent_attributes,
 			JSON_ARRAY()
-		) AS parent_taxonomy_attributes,
-		postmeta.regular_price,
-		postmeta.sale_price,
-		postmeta.sale_price_dates_from,
-		postmeta.sale_price_dates_to,
-		COALESCE(
-			postmeta.global_unique_id,
-			parent_postmeta.global_unique_id
-		) AS global_unique_id,
-		postmeta.stock,
-		parent_postmeta.stock AS parent_stock,
-		postmeta.stock_status,
-		parent_postmeta.stock_status AS parent_stock_status,
-		postmeta.thumbnail_id,
-		parent_postmeta.thumbnail_id AS parent_thumbnail_id,
-		parent_postmeta.product_image_gallery AS parent_product_image_gallery,
+		) AS parent_attributes,
+		JSON_OBJECT(
+			'regular', postmeta.regular_price,
+			'sale', postmeta.sale_price,
+			'sale_dates_from', postmeta.sale_price_dates_from,
+			'sale_dates_to', postmeta.sale_price_dates_to
+		) AS price,
+		COALESCE(postmeta.gtin, parent_postmeta.gtin) AS gtin,
+		JSON_OBJECT(
+			'manage', postmeta.manage_stock,
+			'status', postmeta.stock_status,
+			'quantity', postmeta.stock_quantity
+		) AS stock,
+		JSON_OBJECT(
+			'status', parent_postmeta.stock_status,
+			'quantity', parent_postmeta.stock_quantity
+		) AS parent_stock,
+		JSON_OBJECT(
+			'image_id', COALESCE(postmeta.image_id, parent_postmeta.image_id),
+			'image_ids', parent_postmeta.image_ids
+		) AS image_ids,
 		parent_postmeta.product_attributes AS parent_product_attributes
 
 	FROM posts
@@ -404,10 +423,10 @@ FROM (
 	LEFT JOIN term_ids AS tag_ids
 		ON tag_ids.post_parent_id = posts.parent_id
 		AND tag_ids.taxonomy = 'product_tag'
-	LEFT JOIN taxonomy_attributes
-		ON taxonomy_attributes.post_id = posts.id
-	LEFT JOIN parent_taxonomy_attributes
-		ON parent_taxonomy_attributes.post_id = posts.parent_id
+	LEFT JOIN attributes
+		ON attributes.post_id = posts.id
+	LEFT JOIN parent_attributes
+		ON parent_attributes.post_id = posts.parent_id
 	LEFT JOIN postmeta
 		ON postmeta.post_id = posts.id
 	LEFT JOIN parent_postmeta
