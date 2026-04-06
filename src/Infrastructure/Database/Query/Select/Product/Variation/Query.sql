@@ -5,11 +5,8 @@ WITH posts AS (
 		parent_posts.post_title AS name,
 		posts.post_content AS description,
 		posts.post_excerpt AS short_description,
-		parent_posts.post_content AS parent_description,
 		parent_posts.post_excerpt AS parent_short_description,
-		parent_posts.post_name AS slug,
-		posts.post_status AS status,
-		parent_posts.post_status AS parent_status
+		parent_posts.post_name AS slug
 
 	FROM :posts AS posts
 
@@ -340,7 +337,6 @@ SELECT
 				'name', name,
 				'description', description,
 				'slug', slug,
-				'status', status,
 				'gtin', gtin,
 				'price', price,
 				'stock', stock,
@@ -364,12 +360,10 @@ FROM (
 		posts.name,
 		COALESCE(
 			NULLIF(posts.short_description, ''),
-			NULLIF(posts.description, ''),
 			NULLIF(posts.parent_short_description),
 			NULLIF(posts.parent_description)
 		) AS description,
 		posts.slug,
-		posts.status,
 		COALESCE(
 			brand_ids.term_ids,
 			JSON_ARRAY()

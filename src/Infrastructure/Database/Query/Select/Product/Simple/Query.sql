@@ -4,8 +4,7 @@ WITH posts AS (
 		posts.post_title AS name,
 		posts.post_content AS description,
 		posts.post_excerpt AS short_description,
-		posts.post_name AS slug,
-		posts.post_status AS status
+		posts.post_name AS slug
 
 	FROM :posts AS posts
 
@@ -241,7 +240,6 @@ SELECT
 				'name', name,
 				'description', description,
 				'slug', slug,
-				'status', status,
 				'price', price,
 				'sku', sku,
 				'gtin', gtin,
@@ -266,7 +264,6 @@ FROM (
 			NULLIF(posts.description, ''),
 		) AS description,
 		posts.slug,
-		posts.status,
 		COALESCE(
 			brand_ids.term_ids,
 			JSON_ARRAY()

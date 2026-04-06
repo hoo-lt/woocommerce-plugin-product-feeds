@@ -25,8 +25,6 @@ class Mapper
 			$product = new Domain\Products\Product(
 				new Domain\Products\Product\Id($row['id']),
 				null,
-				Domain\Products\Product\Status::from($row['status']),
-				null,
 				$row['name'],
 				wp_strip_all_tags($row['description'], true),
 				$this->url->withPath("{$this->url->path()}/{$row['slug']}"),

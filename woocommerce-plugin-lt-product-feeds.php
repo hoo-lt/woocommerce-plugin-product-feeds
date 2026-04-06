@@ -36,6 +36,9 @@ $filterHook = $container->get(Infrastructure\Hook\Filter\Hook::class);
 $filterHook();
 */
 
-register_activation_hook(__FILE__, function () {
+register_activation_hook(__FILE__, function () use ($container) {
+	$migrator = $container->get(Hoo\WordPressPluginFramework\Database\Migrator\MigratorInterface::class);
+	$migrator->migrate();
+
 	flush_rewrite_rules();
 });
