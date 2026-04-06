@@ -26,17 +26,35 @@ class Mapper
 				new Domain\Products\Product\Id($row['id']),
 				null,
 				$row['name'],
+				$row['description'],
 				$this->url->withPath("{$this->url->path()}/{$row['slug']}"),
+				Domain\Products\Product\Status::from($row['status']),
 				new Domain\Products\Product\Price(
-					$row['regular_price'],
-					$row['sale_price'],
-					$row['sale_price_dates_from'],
-					$row['sale_price_dates_to'],
+					$row['price']['regular'],
+					$row['price']['sale'],
+					$row['price']['sale_dates_from'],
+					$row['price']['sale_dates_to'],
 				),
-				$row['stock'],
-				Domain\Products\Product\StockStatus::from($row['stock_status']),
-				$row['global_unique_id'],
+				$row['sku'],
+				$row['gtin'],
+				new Domain\Products\Product\Stock(
+					Domain\Products\Product\Stock\Manage::from($row['stock']['manage']),
+					Domain\Products\Product\Stock\Status::from($row['stock']['status']),
+					$row['stock']['quantity'],
+				),
 			);
+
+			if ($row['image_ids']['image_id']) {
+				$product->imageIds->add(
+					new Domain\Products\Product\ImageIds\ImageId($row['image_ids']['image_id']),
+				);
+			}
+
+			foreach (array_filter(array_map(fn($imageId) => (int) $imageId, explode(',', $row['image_ids']['image_ids'] ?? ''))) as $imageId) {
+				$product->imageIds->add(
+					new Domain\Products\Product\ImageIds\ImageId($imageId),
+				);
+			}
 
 			foreach ($row['brand_ids'] as $brandId) {
 				$product->brandIds->add(
@@ -61,11 +79,10 @@ class Mapper
 			foreach (array_filter($productAttributes, fn($productAttribute) => !$productAttribute['is_taxonomy']) as $productAttribute) {
 				$attribute = new Domain\Products\Product\Attributes\Attribute(
 					new Domain\Products\Product\Attributes\Attribute\Name($productAttribute['name']),
-					$productAttribute['is_visible'],
-					$productAttribute['is_variation'],
+					$productAttribute['is_visible'] ?? false,
 				);
 
-				foreach (array_filter(array_map(trim(...), explode('|', $productAttribute['value']))) as $value) {
+				foreach (array_filter(array_map(fn($value) => trim($value), explode('|', $productAttribute['value']))) as $value) {
 					$attribute->terms->add(
 						new Domain\Products\Product\Attributes\Attribute\Terms\Term(
 							new Domain\Products\Product\Attributes\Attribute\Terms\Term\Name($value),
@@ -77,12 +94,11 @@ class Mapper
 			}
 
 			foreach ($row['attributes'] as $attribute) {
-				$productAttribute = $productAttributes["pa_{$attribute['slug']}"] ?? [];
+				$productAttribute = $productAttributes["pa_{$attribute['slug']}"];
 
 				$taxonomyAttribute = new Domain\Products\Product\TaxonomyAttributes\TaxonomyAttribute(
 					new Domain\Products\Product\TaxonomyAttributes\TaxonomyAttribute\Slug($attribute['slug']),
 					$productAttribute['is_visible'] ?? false,
-					$productAttribute['is_variation'] ?? false,
 				);
 
 				foreach ($attribute['terms'] as $term) {
@@ -94,18 +110,6 @@ class Mapper
 				}
 
 				$product->taxonomyAttributes->add($taxonomyAttribute);
-			}
-
-			if ($row['thumbnail_id']) {
-				$product->imageIds->add(
-					new Domain\Products\Product\ImageIds\ImageId($row['thumbnail_id']),
-				);
-			}
-
-			foreach (array_filter(array_map('intval', explode(',', $row['product_image_gallery'] ?? ''))) as $imageId) {
-				$product->imageIds->add(
-					new Domain\Products\Product\ImageIds\ImageId($imageId),
-				);
 			}
 
 			$products->add($product);

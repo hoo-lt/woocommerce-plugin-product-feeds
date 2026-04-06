@@ -7,10 +7,10 @@ readonly class Price
 	protected int $time;
 
 	public function __construct(
-		protected ?float $regularPrice,
-		protected ?float $salePrice,
-		protected ?int $salePriceDatesFrom,
-		protected ?int $salePriceDatesTo,
+		protected ?float $regular,
+		protected ?float $sale,
+		protected ?int $saleDatesFrom,
+		protected ?int $saleDatesTo,
 	) {
 		$this->time = time();
 	}
@@ -18,36 +18,19 @@ readonly class Price
 	public function __invoke(): ?float
 	{
 		if (
-			$this->salePrice !== null &&
+			$this->sale !== null &&
 			(
-				$this->salePriceDatesFrom === null ||
-				$this->time >= $this->salePriceDatesFrom
+				$this->saleDatesFrom === null ||
+				$this->time >= $this->saleDatesFrom
 			) &&
 			(
-				$this->salePriceDatesTo === null ||
-				$this->time <= $this->salePriceDatesTo
+				$this->saleDatesTo === null ||
+				$this->time <= $this->saleDatesTo
 			)
 		) {
-			return $this->salePrice;
+			return $this->sale;
 		}
 
-		return $this->regularPrice;
-	}
-
-	public function discount(): float
-	{
-		return $this->regularPrice !== null ? round($this->regularPrice - ($this)(), 2) : 0.0;
-	}
-
-	public function discountPercent(): float
-	{
-		if (
-			$this->regularPrice === null ||
-			$this->regularPrice === 0.0
-		) {
-			return 0.0;
-		}
-
-		return round($this->discount() / $this->regularPrice * 100, 2);
+		return $this->regular;
 	}
 }

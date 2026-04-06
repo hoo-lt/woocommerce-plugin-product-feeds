@@ -11,7 +11,6 @@ readonly class TaxonomyAttribute implements Collection\Item\ItemInterface
 	public function __construct(
 		protected TaxonomyAttribute\Slug $slug,
 		public bool $isVisible,
-		public bool $isVariation,
 	) {
 		$this->terms = new TaxonomyAttribute\Terms();
 	}

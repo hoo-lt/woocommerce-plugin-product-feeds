@@ -30,7 +30,7 @@ readonly class Query implements QueryInterface
 		);
 	}
 
-	public function withStatuses(Domain\Post\Status ...$statuses): self
+	public function withStatuses(Domain\Products\Product\Status ...$statuses): self
 	{
 		return new self(
 			$this->wpdb,

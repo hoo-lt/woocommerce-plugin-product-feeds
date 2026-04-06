@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Post;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Products\Product;
 
 enum Status: string
 {
-	case Publish = 'publish';
+	case Published = 'publish';
 	case Future = 'future';
 	case Draft = 'draft';
 	case Pending = 'pending';

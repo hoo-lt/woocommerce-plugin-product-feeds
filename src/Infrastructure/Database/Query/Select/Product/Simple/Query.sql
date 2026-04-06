@@ -2,9 +2,10 @@ WITH posts AS (
 	SELECT
 		posts.ID AS id,
 		posts.post_title AS name,
-		posts.post_name AS slug,
 		posts.post_content AS description,
-		posts.post_excerpt AS short_description
+		posts.post_excerpt AS short_description,
+		posts.post_name AS slug,
+		posts.post_status AS status
 
 	FROM :posts AS posts
 
@@ -148,21 +149,22 @@ postmeta AS (
 		) AS sale_price_dates_to,
 		MAX(
 			CASE
+				WHEN meta_key = '_sku'
+				THEN meta_value
+			END
+		) AS sku,
+		MAX(
+			CASE
 				WHEN meta_key = '_global_unique_id'
 				THEN meta_value
 			END
-		) AS global_unique_id,
-		CAST(
-			NULLIF(
-				MAX(
-					CASE
-						WHEN meta_key = '_stock'
-						THEN meta_value
-					END
-				),
-				''
-			) AS SIGNED
-		) AS stock,
+		) AS gtin,
+		MAX(
+			CASE
+				WHEN meta_key = '_manage_stock'
+				THEN meta_value
+			END
+		) AS manage_stock,
 		MAX(
 			CASE
 				WHEN meta_key = '_stock_status'
@@ -173,13 +175,24 @@ postmeta AS (
 			NULLIF(
 				MAX(
 					CASE
+						WHEN meta_key = '_stock'
+						THEN meta_value
+					END
+				),
+				''
+			) AS SIGNED
+		) AS stock_quantity,
+		CAST(
+			NULLIF(
+				MAX(
+					CASE
 						WHEN meta_key = '_thumbnail_id'
 						THEN meta_value
 					END
 				),
 				''
 			) AS UNSIGNED
-		) AS thumbnail_id,
+		) AS image_id,
 		NULLIF(
 			MAX(
 				CASE
@@ -188,7 +201,7 @@ postmeta AS (
 				END
 			),
 			''
-		) AS product_image_gallery,
+		) AS image_ids,
 		MAX(
 			CASE
 				WHEN meta_key = '_product_attributes'
@@ -206,9 +219,11 @@ postmeta AS (
 			'_sale_price',
 			'_sale_price_dates_from',
 			'_sale_price_dates_to',
+			'_sku',
 			'_global_unique_id',
-			'_stock',
+			'_manage_stock',
 			'_stock_status',
+			'_stock',
 			'_thumbnail_id',
 			'_product_image_gallery',
 			'_product_attributes'
@@ -224,18 +239,14 @@ SELECT
 			JSON_OBJECT(
 				'id', id,
 				'name', name,
-				'slug', slug,
 				'description', description,
-				'short_description', short_description,
-				'regular_price', regular_price,
-				'sale_price', sale_price,
-				'sale_price_dates_from', sale_price_dates_from,
-				'sale_price_dates_to', sale_price_dates_to,
-				'global_unique_id', global_unique_id,
+				'slug', slug,
+				'status', status,
+				'price', price,
+				'sku', sku,
+				'gtin', gtin,
 				'stock', stock,
-				'stock_status', stock_status,
-				'thumbnail_id', thumbnail_id,
-				'product_image_gallery', product_image_gallery,
+				'image_ids', image_ids,
 				'product_attributes', product_attributes,
 				'brand_ids', brand_ids,
 				'category_ids', category_ids,
@@ -250,9 +261,12 @@ FROM (
 	SELECT
 		posts.id,
 		posts.name,
+		COALESCE(
+			posts.short_description,
+			posts.description
+		) AS description,
 		posts.slug,
-		posts.description,
-		posts.short_description,
+		posts.status,
 		COALESCE(
 			brand_ids.term_ids,
 			JSON_ARRAY()
@@ -269,15 +283,23 @@ FROM (
 			attributes.attributes,
 			JSON_ARRAY()
 		) AS attributes,
-		postmeta.regular_price,
-		postmeta.sale_price,
-		postmeta.sale_price_dates_from,
-		postmeta.sale_price_dates_to,
-		postmeta.global_unique_id,
-		postmeta.stock,
-		postmeta.stock_status,
-		postmeta.thumbnail_id,
-		postmeta.product_image_gallery,
+		JSON_OBJECT(
+			'regular', postmeta.regular_price,
+			'sale', postmeta.sale_price,
+			'sale_dates_from', postmeta.sale_price_dates_from,
+			'sale_dates_to', postmeta.sale_price_dates_to
+		) AS price,
+		postmeta.sku,
+		postmeta.gtin,
+		JSON_OBJECT(
+			'manage', postmeta.manage_stock,
+			'status', postmeta.stock_status,
+			'quantity', postmeta.stock_quantity
+		) AS stock,
+		JSON_OBJECT(
+			'image_id', postmeta.image_id,
+			'image_ids', postmeta.image_ids
+		) AS image_ids,
 		postmeta.product_attributes
 
 	FROM posts

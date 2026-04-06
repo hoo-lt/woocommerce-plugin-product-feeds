@@ -11,7 +11,6 @@ readonly class Attribute implements Collection\Item\ItemInterface
 	public function __construct(
 		protected Attribute\Name $name,
 		public bool $isVisible,
-		public bool $isVariation,
 	) {
 		$this->terms = new Attribute\Terms();
 	}

@@ -17,7 +17,7 @@ $container = require __DIR__ . '/container.php';
 $database = $container->get(DatabaseInterface::class);
 $query = $container->get(Infrastructure\Database\Query\Select\Product\Simple\Query::class);
 
-$rows = $database->json($query->withStatuses(Domain\Post\Status::Publish));
+$rows = $database->json($query);
 
 $mapper = new Infrastructure\Mapper\Product\Simple\Mapper(
 	site_url(),
