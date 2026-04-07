@@ -36,19 +36,12 @@ return [
 		$_POST,
 	)),
 
-	WordPressPluginFramework\Database\Migrator\MigratorRepositoryInterface::class => DI\autowire(WordPressPluginFramework\Database\Migrator\MigratorRepository::class)
+	WordPressPluginFramework\Database\Migrator\MigratorRepositoryInterface::class => DI\get(WordPressPluginFramework\Database\Migrator\MigratorRepository::class),
+	WordPressPluginFramework\Database\Migrator\MigratorInterface::class => DI\autowire(WordPressPluginFramework\Database\Migrator\Migrator::class)
 		->constructorParameter(
-			'option',
-			'lt_product_feeds_db_version'
+			'path',
+			__DIR__ . '/src/Infrastructure/Database/Migration'
 		),
-	WordPressPluginFramework\Database\Migrator\MigratorInterface::class => DI\factory(function (DI\Container $container) {
-		return new WordPressPluginFramework\Database\Migrator\Migrator(
-			$container->get(WordPressPluginFramework\Database\Migrator\MigratorRepositoryInterface::class),
-			[
-				$container->get(Infrastructure\Database\Migration\CreateFeedAccessTable\Migration::class),
-			],
-		);
-	}),
 
 		/**
 		 * Repositories
