@@ -1,16 +1,16 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mapper\Term;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mappers\Term;
 
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 
 class Mapper
 {
-	public function all(array $table): Domain\Terms
+	public function map(array $array): Domain\Terms
 	{
 		$terms = new Domain\Terms();
 
-		foreach ($table as [
+		foreach ($array as [
 			'id' => $id,
 			'name' => $name,
 		]) {

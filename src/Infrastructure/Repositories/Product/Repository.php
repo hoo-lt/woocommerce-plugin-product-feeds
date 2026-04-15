@@ -13,9 +13,9 @@ readonly class Repository implements Domain\Repository\Product\RepositoryInterfa
 		protected DatabaseInterface $database,
 		protected JsonInterface $json,
 		protected Infrastructure\Database\Queries\Select\Product\Simple\Query $selectSimpleProductQuery,
-		protected Infrastructure\Mapper\Product\Simple\Mapper $simpleProductMapper,
+		protected Infrastructure\Mappers\Product\Simple\Mapper $simpleProductMapper,
 		protected Infrastructure\Database\Queries\Select\Product\Variation\Query $selectProductVariationQuery,
-		protected Infrastructure\Mapper\Product\Variation\Mapper $productVariationMapper,
+		protected Infrastructure\Mappers\Product\Variation\Mapper $productVariationMapper,
 		protected array $ids = [],
 		protected array $statuses = [],
 	) {
@@ -68,8 +68,8 @@ readonly class Repository implements Domain\Repository\Product\RepositoryInterfa
 		}
 
 		$products = new Domain\Products();
-		$products->merge($this->simpleProductMapper->all($this->database->select($selectSimpleProductQuery)));
-		$products->merge($this->productVariationMapper->all($this->database->select($selectProductVariationQuery)));
+		$products->merge($this->simpleProductMapper->map($this->database->select($selectSimpleProductQuery)));
+		$products->merge($this->productVariationMapper->map($this->database->select($selectProductVariationQuery)));
 
 		return $products;
 	}

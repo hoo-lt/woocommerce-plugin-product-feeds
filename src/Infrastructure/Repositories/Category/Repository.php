@@ -11,12 +11,12 @@ readonly class Repository implements Domain\Repository\Category\RepositoryInterf
 	public function __construct(
 		protected SelectInterface $select,
 		protected Infrastructure\Database\Queries\Select\Term\Query $termQuery,
-		protected Infrastructure\Mapper\Category\Mapper $categoryMapper,
+		protected Infrastructure\Mappers\Category\Mapper $categoryMapper,
 	) {
 	}
 
 	public function all(): Domain\Categories
 	{
-		return $this->categoryMapper->all(($this->select)($this->termQuery));
+		return $this->categoryMapper->map(($this->select)($this->termQuery));
 	}
 }

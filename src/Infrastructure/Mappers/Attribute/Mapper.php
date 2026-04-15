@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mapper\Attribute;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mappers\Attribute;
 
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 

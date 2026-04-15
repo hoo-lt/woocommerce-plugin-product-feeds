@@ -13,7 +13,7 @@ readonly class Repository implements Domain\Repository\Attribute\RepositoryInter
 		protected SelectInterface $select,
 		protected JsonInterface $json,
 		protected Infrastructure\Database\Queries\Select\Attribute\Query $attributeQuery,
-		protected Infrastructure\Mapper\Attribute\Mapper $attributeMapper,
+		protected Infrastructure\Mappers\Attribute\Mapper $attributeMapper,
 	) {
 	}
 

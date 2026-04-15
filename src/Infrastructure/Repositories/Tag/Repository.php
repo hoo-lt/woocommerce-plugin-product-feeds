@@ -11,12 +11,12 @@ readonly class Repository implements Domain\Repository\Tag\RepositoryInterface
 	public function __construct(
 		protected SelectInterface $select,
 		protected Infrastructure\Database\Queries\Select\Term\Query $termQuery,
-		protected Infrastructure\Mapper\Tag\Mapper $tagMapper,
+		protected Infrastructure\Mappers\Tag\Mapper $tagMapper,
 	) {
 	}
 
 	public function all(): Domain\Tags
 	{
-		return $this->tagMapper->all(($this->select)($this->termQuery));
+		return $this->tagMapper->map(($this->select)($this->termQuery));
 	}
 }

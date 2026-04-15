@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mapper\Category;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mappers\Category;
 
 use Hoo\WordPressPluginFramework\Http;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
@@ -17,11 +17,11 @@ class Mapper
 			->withPath($path);
 	}
 
-	public function all(array $table): Domain\Categories
+	public function map(array $array): Domain\Categories
 	{
 		$categories = new Domain\Categories();
 
-		foreach ($table as [
+		foreach ($array as [
 			'id' => $id,
 			'parent_id' => $parentId,
 			'name' => $name,

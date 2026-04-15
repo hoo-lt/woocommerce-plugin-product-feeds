@@ -11,12 +11,12 @@ readonly class Repository implements Domain\Repository\TermRelationship\Reposito
 	public function __construct(
 		protected SelectInterface $select,
 		protected Infrastructure\Database\Queries\Select\TermRelationship\Query $termRelationshipQuery,
-		protected Infrastructure\Mapper\TermRelationship\Mapper $termRelationshipMapper,
+		protected Infrastructure\Mappers\TermRelationship\Mapper $termRelationshipMapper,
 	) {
 	}
 
 	public function objectIds(): array
 	{
-		return $this->termRelationshipMapper->objectIds(($this->select)($this->termRelationshipQuery));
+		return $this->termRelationshipMapper->map(($this->select)($this->termRelationshipQuery));
 	}
 }

@@ -19,7 +19,7 @@ $query = $container->get(Infrastructure\Database\Queries\Select\Product\Simple\Q
 
 $rows = $database->json($query);
 
-$mapper = new Infrastructure\Mapper\Product\Simple\Mapper(
+$mapper = new Infrastructure\Mappers\Product\Simple\Mapper(
 	site_url(),
 	'/' . ltrim(get_option('woocommerce_permalinks')['product_base'], '/'),
 );

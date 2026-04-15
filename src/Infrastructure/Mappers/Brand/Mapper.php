@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mapper\Tag;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mappers\Brand;
 
 use Hoo\WordPressPluginFramework\Http;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
@@ -17,29 +17,29 @@ class Mapper
 			->withPath($path);
 	}
 
-	public function all(array $table): Domain\Tags
+	public function map(array $array): Domain\Brands
 	{
-		$tags = new Domain\Tags();
+		$brands = new Domain\Brands();
 
-		foreach ($table as [
+		foreach ($array as [
 			'id' => $id,
 			'parent_id' => $parentId,
 			'name' => $name,
 			'path' => $path,
 		]) {
-			$id = new Domain\Tags\Tag\Id(
+			$id = new Domain\Brands\Brand\Id(
 				$id
 			);
 
-			if ($tags->has($id)) {
+			if ($brands->has($id)) {
 				continue;
 			}
 
-			$parentId = $parentId ? new Domain\Tags\Tag\Id(
+			$parentId = $parentId ? new Domain\Brands\Brand\Id(
 				$parentId
 			) : null;
 
-			$tags->add(new Domain\Tags\Tag(
+			$brands->add(new Domain\Brands\Brand(
 				$id,
 				$parentId,
 				$name,
@@ -47,6 +47,6 @@ class Mapper
 			));
 		}
 
-		return $tags;
+		return $brands;
 	}
 }

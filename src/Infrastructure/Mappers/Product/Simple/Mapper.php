@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mapper\Product\Variation;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mappers\Product\Simple;
 
 use Hoo\WordPressPluginFramework\Http;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
@@ -17,15 +17,13 @@ class Mapper
 			->withPath($path);
 	}
 
-	public function all(array $rows): Domain\Products
+	public function map(array $array): Domain\Products
 	{
 		$products = new Domain\Products();
 
-		foreach ($rows as $row) {
+		foreach ($array as $row) {
 			$product = new Domain\Products\Product(
 				new Domain\Products\Product\Id($row['id']),
-				null,
-				Domain\Products\Product\Status::from($row['status']),
 				null,
 				$row['name'],
 				wp_strip_all_tags($row['description'], true),

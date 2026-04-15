@@ -87,7 +87,7 @@ return [
 		/**
 		 * Mappers
 		 */
-	Infrastructure\Mapper\Brand\Mapper::class => DI\autowire()
+	Infrastructure\Mappers\Brand\Mapper::class => DI\autowire()
 		->constructorParameter(
 			'url',
 			site_url()
@@ -96,7 +96,7 @@ return [
 			'path',
 			'/' . ltrim(get_option('woocommerce_brand_permalink'), '/') ?? ''
 		),
-	Infrastructure\Mapper\Category\Mapper::class => DI\autowire()
+	Infrastructure\Mappers\Category\Mapper::class => DI\autowire()
 		->constructorParameter(
 			'url',
 			site_url()
@@ -105,7 +105,7 @@ return [
 			'path',
 			'/' . ltrim(get_option('woocommerce_permalinks')['category_base'], '/') ?? ''
 		),
-	Infrastructure\Mapper\Product\Mapper::class => DI\autowire()
+	Infrastructure\Mappers\Product\Mapper::class => DI\autowire()
 		->constructorParameter(
 			'url',
 			site_url()
@@ -114,7 +114,7 @@ return [
 			'path',
 			'/' . ltrim(get_option('woocommerce_permalinks')['product_base'], '/') ?? ''
 		),
-	Infrastructure\Mapper\Tag\Mapper::class => DI\autowire()
+	Infrastructure\Mappers\Tag\Mapper::class => DI\autowire()
 		->constructorParameter(
 			'url',
 			site_url()
