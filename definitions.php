@@ -46,8 +46,8 @@ return [
 		/**
 		 * Repositories
 		 */
-	Domain\Repository\Attribute\RepositoryInterface::class => DI\get(Infrastructure\Repository\Attribute\Repository::class),
-	Domain\Repository\Brand\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Brand\Repository::class)
+	Domain\Repository\Attribute\RepositoryInterface::class => DI\get(Infrastructure\Repositories\Attribute\Repository::class),
+	Domain\Repository\Brand\RepositoryInterface::class => DI\autowire(Infrastructure\Repositories\Brand\Repository::class)
 		->constructorParameter(
 			'selectTermQuery',
 			DI\autowire(Infrastructure\Database\Queries\Select\Term\Query::class)
@@ -56,7 +56,7 @@ return [
 					Domain\Taxonomy::Brand
 				)
 		),
-	Domain\Repository\Category\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Category\Repository::class)
+	Domain\Repository\Category\RepositoryInterface::class => DI\autowire(Infrastructure\Repositories\Category\Repository::class)
 		->constructorParameter(
 			'selectTermQuery',
 			DI\autowire(Infrastructure\Database\Queries\Select\Term\Query::class)
@@ -65,8 +65,8 @@ return [
 					Domain\Taxonomy::Category
 				)
 		),
-	Domain\Repository\Product\RepositoryInterface::class => DI\get(Infrastructure\Repository\Product\Repository::class),
-	Domain\Repository\Tag\RepositoryInterface::class => DI\autowire(Infrastructure\Repository\Tag\Repository::class)
+	Domain\Repository\Product\RepositoryInterface::class => DI\get(Infrastructure\Repositories\Product\Repository::class),
+	Domain\Repository\Tag\RepositoryInterface::class => DI\autowire(Infrastructure\Repositories\Tag\Repository::class)
 		->constructorParameter(
 			'selectTermQuery',
 			DI\autowire(Infrastructure\Database\Queries\Select\Term\Query::class)
@@ -75,8 +75,8 @@ return [
 					Domain\Taxonomy::Tag
 				)
 		),
-	Domain\Repository\TermMeta\RepositoryInterface::class => DI\get(Infrastructure\Repository\TermMeta\Repository::class),
-	Domain\Repository\TermRelationship\RepositoryInterface::class => DI\get(Infrastructure\Repository\TermRelationship\Repository::class),
+	Domain\Repository\TermMeta\RepositoryInterface::class => DI\get(Infrastructure\Repositories\TermMeta\Repository::class),
+	Domain\Repository\TermRelationship\RepositoryInterface::class => DI\get(Infrastructure\Repositories\TermRelationship\Repository::class),
 
 	Infrastructure\Database\Queries\Select\TermRelationship\Query::class => DI\autowire()
 		->constructorParameter(

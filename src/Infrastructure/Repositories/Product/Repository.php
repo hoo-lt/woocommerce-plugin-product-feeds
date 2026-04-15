@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repository\Product;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repositories\Product;
 
 use Hoo\WordPressPluginFramework\Database\DatabaseInterface;
 use Hoo\WordPressPluginFramework\Json\JsonInterface;

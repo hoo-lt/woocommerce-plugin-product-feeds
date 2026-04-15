@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repository\Attribute;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repositories\Attribute;
 
 use Hoo\WordPressPluginFramework\Database\SelectInterface;
 use Hoo\WordPressPluginFramework\Json\JsonInterface;

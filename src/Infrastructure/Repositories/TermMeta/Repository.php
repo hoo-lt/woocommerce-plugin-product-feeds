@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repository\TermMeta;
+namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repositories\TermMeta;
 
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 
