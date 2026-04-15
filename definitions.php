@@ -7,40 +7,47 @@ use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 use Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure;
 use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 
+global $wpdb;
+
 return [
 		/**
 		 * WordPress Plugin Framework
 		 */
 	WordPressPluginFramework\Cache\CacheInterface::class => DI\get(WordPressPluginFramework\Cache\Cache::class),
-	WordPressPluginFramework\Database\DatabaseInterface::class => DI\get(WordPressPluginFramework\Database\Database::class),
-	WordPressPluginFramework\Json\JsonInterface::class => DI\get(WordPressPluginFramework\Json\Json::class),
-	WordPressPluginFramework\Pipeline\PipelineInterface::class => DI\get(WordPressPluginFramework\Pipeline\Pipeline::class),
-	WordPressPluginFramework\View\ViewInterface::class => DI\autowire(WordPressPluginFramework\View\View::class)
+
+	WordPressPluginFramework\Database\Migrator\MigratorInterface::class => DI\autowire(WordPressPluginFramework\Database\Migrator\Migrator::class)
 		->constructorParameter(
 			'path',
-			WOOCOMMERCE_PRODUCT_FEEDS_PLUGIN_PATH . '/src/Presentation/View'
+			__DIR__ . '/src/Infrastructure/Database/Migrations',
 		),
-	WordPressPluginFramework\Logger\LoggerInterface::class => DI\autowire(WooCommercePluginFramework\Logger\Logger::class)
+	WordPressPluginFramework\Database\Table\TableInterface::class => DI\autowire(WordPressPluginFramework\Database\Table\Table::class)
 		->constructorParameter(
-			'source',
-			'product-feeds'
+			'prefix',
+			$wpdb->prefix,
 		),
-	WordPressPluginFramework\Middlewares\VerifyNonce\Middleware::class => DI\autowire()
-		->constructorParameter(
-			'nonceName',
-			'product_feeds_nonce'
-		),
-
+	WordPressPluginFramework\Database\SelectInterface::class => DI\get(WordPressPluginFramework\Database\Select::class),
 	WordPressPluginFramework\Http\RequestInterface::class => DI\factory(fn() => new WordPressPluginFramework\Http\Request(
 		$_GET,
 		$_POST,
 	)),
-
-	WordPressPluginFramework\Database\Migrator\MigratorRepositoryInterface::class => DI\get(WordPressPluginFramework\Database\Migrator\MigratorRepository::class),
-	WordPressPluginFramework\Database\Migrator\MigratorInterface::class => DI\autowire(WordPressPluginFramework\Database\Migrator\Migrator::class)
+	WordPressPluginFramework\Json\JsonInterface::class => DI\get(WordPressPluginFramework\Json\Json::class),
+	WordPressPluginFramework\Loggers\LoggerInterface::class => DI\autowire(WooCommercePluginFramework\Loggers\Logger::class)
+		->constructorParameter(
+			'source',
+			'product-feeds',
+		),
+	WordPressPluginFramework\Middlewares\VerifyNonce\Middleware::class => DI\autowire()
+		->constructorParameter(
+			'name',
+			'product_feeds_nonce',
+		),
+	WordPressPluginFramework\Pipeline\PipelineInterface::class => DI\get(WordPressPluginFramework\Pipeline\Pipeline::class),
+	WordPressPluginFramework\Router\Router::class => DI\autowire(),
+	WordPressPluginFramework\Repositories\Database\Migrator\RepositoryInterface::class => DI\get(WordPressPluginFramework\Repositories\Database\Migrator\Repository::class),
+	WordPressPluginFramework\View\ViewInterface::class => DI\autowire(WordPressPluginFramework\View\View::class)
 		->constructorParameter(
 			'path',
-			__DIR__ . '/src/Infrastructure/Database/Migration'
+			WOOCOMMERCE_PRODUCT_FEEDS_PLUGIN_PATH . '/src/Presentation/Views',
 		),
 
 		/**
@@ -105,7 +112,7 @@ return [
 			'path',
 			'/' . ltrim(get_option('woocommerce_permalinks')['category_base'], '/') ?? ''
 		),
-	Infrastructure\Mappers\Product\Mapper::class => DI\autowire()
+	Infrastructure\Mappers\Product\Simple\Mapper::class => DI\autowire()
 		->constructorParameter(
 			'url',
 			site_url()
@@ -125,26 +132,6 @@ return [
 		),
 
 	/**
-	 * Hooks
-	 */
-	/*
-	Infrastructure\Hook\Action\Hook::class => DI\factory(function (DI\Container $container) {
-		$pipeline = $container->get(WordPressPluginFramework\Pipeline\PipelineInterface::class);
-		$feedPresenters = array_map($container->get(...), [
-			...[
-				Presentation\Presenters\Feed\Kaina24Lt\Presenter::class,
-			],
-			...apply_filters('woocommerce_product_feeds_add_feed_presenters', []),
-		]);
-
-		return new Infrastructure\Hook\Action\Hook(
-			$pipeline,
-			...$feedPresenters
-		);
-	}),
-	*/
-
-	/**
 	 * Controllers
 	 */
 	/*
@@ -159,10 +146,7 @@ return [
 	/**
 	 * WordPress
 	 */
-	wpdb::class => DI\factory(function () {
-		global $wpdb;
-		return $wpdb;
-	}),
+	wpdb::class => DI\factory(fn() => $wpdb),
 
 	/**
 	 * WooCommerce

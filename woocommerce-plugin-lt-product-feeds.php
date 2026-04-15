@@ -28,13 +28,50 @@ require __DIR__ . '/vendor/autoload.php';
 
 $container = require __DIR__ . '/container.php';
 
-/*
-$actionHook = $container->get(Infrastructure\Hook\Action\Hook::class);
-$actionHook();
+use Hoo\WordPressPluginFramework;
+use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
+use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 
-$filterHook = $container->get(Infrastructure\Hook\Filter\Hook::class);
-$filterHook();
-*/
+$router = $container->get(WordPressPluginFramework\Router\Router::class);
+$verifyNonce = $container->get(WordPressPluginFramework\Middlewares\VerifyNonce\Middleware::class);
+$termPresenter = $container->get(Presentation\Presenters\Term\Presenter::class);
+
+add_action('admin_enqueue_scripts', fn() =>
+	wp_enqueue_style('product-feeds-admin', WOOCOMMERCE_PRODUCT_FEEDS_PLUGIN_URL . 'assets/css/admin.css')
+);
+
+foreach (Domain\Taxonomy::cases() as $taxonomy) {
+	$router->addRoutes(
+		WordPressPluginFramework\Route\Route::filter("manage_edit-{$taxonomy->value}_columns", fn(array $columns) =>
+			$columns += ['product_feeds' => esc_html__('Product feeds', 'product-feeds')]
+		),
+
+		WordPressPluginFramework\Route\Route::filter("manage_{$taxonomy->value}_custom_column", fn(string $string, string $column_name, int $term_id) =>
+			match ($column_name) {
+				'product_feeds' => $termPresenter->view($term_id),
+				default => $string,
+			}
+		),
+
+		WordPressPluginFramework\Route\Route::action("{$taxonomy->value}_add_form_fields", fn() =>
+			print $termPresenter->addView()
+		),
+
+		WordPressPluginFramework\Route\Route::action("{$taxonomy->value}_edit_form_fields", fn(WP_Term $tag) =>
+			print $termPresenter->editView($tag->term_id)
+		),
+
+		WordPressPluginFramework\Route\Route::action("created_{$taxonomy->value}", fn(int $term_id) =>
+			$termPresenter->save($term_id)
+		)->withMiddlewares($verifyNonce),
+
+		WordPressPluginFramework\Route\Route::action("edited_{$taxonomy->value}", fn(int $term_id) =>
+			$termPresenter->save($term_id)
+		)->withMiddlewares($verifyNonce),
+	);
+}
+
+$router();
 
 register_activation_hook(__FILE__, function () use ($container) {
 	$migrator = $container->get(Hoo\WordPressPluginFramework\Database\Migrator\MigratorInterface::class);
