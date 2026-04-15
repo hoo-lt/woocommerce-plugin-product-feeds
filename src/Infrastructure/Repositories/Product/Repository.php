@@ -2,7 +2,7 @@
 
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Repositories\Product;
 
-use Hoo\WordPressPluginFramework\Database\DatabaseInterface;
+use Hoo\WordPressPluginFramework\Database\SelectInterface;
 use Hoo\WordPressPluginFramework\Json\JsonInterface;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 use Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure;
@@ -10,11 +10,11 @@ use Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure;
 readonly class Repository implements Domain\Repository\Product\RepositoryInterface
 {
 	public function __construct(
-		protected DatabaseInterface $database,
+		protected SelectInterface $select,
 		protected JsonInterface $json,
-		protected Infrastructure\Database\Queries\Select\Product\Simple\Query $selectSimpleProductQuery,
+		protected Infrastructure\Database\Queries\Select\Product\Simple\Query $simpleProductQuery,
 		protected Infrastructure\Mappers\Product\Simple\Mapper $simpleProductMapper,
-		protected Infrastructure\Database\Queries\Select\Product\Variation\Query $selectProductVariationQuery,
+		protected Infrastructure\Database\Queries\Select\Product\Variation\Query $productVariationQuery,
 		protected Infrastructure\Mappers\Product\Variation\Mapper $productVariationMapper,
 		protected array $ids = [],
 		protected array $statuses = [],
@@ -24,10 +24,11 @@ readonly class Repository implements Domain\Repository\Product\RepositoryInterfa
 	public function withIds(int ...$ids): self
 	{
 		return new self(
-			$this->database,
-			$this->selectSimpleProductQuery,
+			$this->select,
+			$this->json,
+			$this->simpleProductQuery,
 			$this->simpleProductMapper,
-			$this->selectProductVariationQuery,
+			$this->productVariationQuery,
 			$this->productVariationMapper,
 			$ids,
 			$this->statuses
@@ -37,10 +38,11 @@ readonly class Repository implements Domain\Repository\Product\RepositoryInterfa
 	public function withStatuses(Domain\Products\Product\Status ...$statuses): self
 	{
 		return new self(
-			$this->database,
-			$this->selectSimpleProductQuery,
+			$this->select,
+			$this->json,
+			$this->simpleProductQuery,
 			$this->simpleProductMapper,
-			$this->selectProductVariationQuery,
+			$this->productVariationQuery,
 			$this->productVariationMapper,
 			$this->ids,
 			$statuses
@@ -49,27 +51,35 @@ readonly class Repository implements Domain\Repository\Product\RepositoryInterfa
 
 	public function all(): Domain\Products
 	{
-		$selectSimpleProductQuery = $this->selectSimpleProductQuery;
-		$selectProductVariationQuery = $this->selectProductVariationQuery;
+		$simpleProductQuery = $this->simpleProductQuery;
+		$productVariationQuery = $this->productVariationQuery;
 
 		if ($this->ids) {
-			$selectSimpleProductQuery = $selectSimpleProductQuery
+			$simpleProductQuery = $simpleProductQuery
 				->withIds(...$this->ids);
-			$selectProductVariationQuery = $selectProductVariationQuery
+			$productVariationQuery = $productVariationQuery
 				->withIds(...$this->ids);
 		}
 
 		if ($this->statuses) {
-			$selectSimpleProductQuery = $selectSimpleProductQuery
+			$simpleProductQuery = $simpleProductQuery
 				->withStatuses(...$this->statuses);
-			$selectProductVariationQuery = $selectProductVariationQuery
+			$productVariationQuery = $productVariationQuery
 				->withStatuses(...$this->statuses)
 				->withParentStatuses(...$this->statuses);
 		}
 
 		$products = new Domain\Products();
-		$products->merge($this->simpleProductMapper->map($this->database->select($selectSimpleProductQuery)));
-		$products->merge($this->productVariationMapper->map($this->database->select($selectProductVariationQuery)));
+		$products->merge($this->simpleProductMapper->map(
+			$this->json->decode(
+				($this->select)($simpleProductQuery)[0]['products']
+			)
+		));
+		$products->merge($this->productVariationMapper->map(
+			$this->json->decode(
+				($this->select)($productVariationQuery)[0]['products']
+			)
+		));
 
 		return $products;
 	}
