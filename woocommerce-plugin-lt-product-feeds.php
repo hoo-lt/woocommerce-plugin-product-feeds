@@ -32,7 +32,8 @@ use Hoo\WordPressPluginFramework;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 
-$router = $container->get(WordPressPluginFramework\Router\Router::class);
+$hooker = $container->get(WordPressPluginFramework\Hooker\Hooker::class);
+$pipeline = $container->get(WordPressPluginFramework\Pipeline\PipelineInterface::class);
 $verifyNonce = $container->get(WordPressPluginFramework\Middlewares\VerifyNonce\Middleware::class);
 $termPresenter = $container->get(Presentation\Presenters\Term\Presenter::class);
 
@@ -40,49 +41,57 @@ add_action('admin_enqueue_scripts', fn() =>
 	wp_enqueue_style('product-feeds-admin', WOOCOMMERCE_PRODUCT_FEEDS_PLUGIN_URL . 'assets/css/admin.css')
 );
 
+$hooks = [];
+
 foreach (Domain\Taxonomy::cases() as $taxonomy) {
-	$router->addRoutes(
-		WordPressPluginFramework\Route\Route::filter("manage_edit-{$taxonomy->value}_columns", fn(array $columns) =>
+	$hooks = [
+		...$hooks,
+
+		new WordPressPluginFramework\Hook\FilterHook($pipeline, "manage_edit-{$taxonomy->value}_columns", fn(array $columns) =>
 			$columns += ['product_feeds' => esc_html__('Product feeds', 'product-feeds')]
 		),
 
-		WordPressPluginFramework\Route\Route::filter("manage_{$taxonomy->value}_custom_column", fn(string $string, string $column_name, int $term_id) =>
+		new WordPressPluginFramework\Hook\FilterHook($pipeline, "manage_{$taxonomy->value}_custom_column", fn(string $string, string $column_name, int $term_id) =>
 			match ($column_name) {
 				'product_feeds' => $termPresenter->view($term_id),
 				default => $string,
 			}
 		),
 
-		WordPressPluginFramework\Route\Route::action("{$taxonomy->value}_add_form_fields", fn() =>
+		new WordPressPluginFramework\Hook\ActionHook($pipeline, "{$taxonomy->value}_add_form_fields", fn() =>
 			print $termPresenter->addView()
 		),
 
-		WordPressPluginFramework\Route\Route::action("{$taxonomy->value}_edit_form_fields", fn(WP_Term $tag) =>
+		new WordPressPluginFramework\Hook\ActionHook($pipeline, "{$taxonomy->value}_edit_form_fields", fn(WP_Term $tag) =>
 			print $termPresenter->editView($tag->term_id)
 		),
 
-		WordPressPluginFramework\Route\Route::action("created_{$taxonomy->value}", fn(int $term_id) =>
+		(new WordPressPluginFramework\Hook\ActionHook($pipeline, "created_{$taxonomy->value}", fn(int $term_id) =>
 			$termPresenter->save($term_id)
-		)->withMiddlewares($verifyNonce),
+		))->withMiddlewares($verifyNonce),
 
-		WordPressPluginFramework\Route\Route::action("edited_{$taxonomy->value}", fn(int $term_id) =>
+		(new WordPressPluginFramework\Hook\ActionHook($pipeline, "edited_{$taxonomy->value}", fn(int $term_id) =>
 			$termPresenter->save($term_id)
-		)->withMiddlewares($verifyNonce),
-	);
+		))->withMiddlewares($verifyNonce),
+	];
 }
 
-$router();
+$hooker = $hooker->withHooks(
+	...$hooks,
 
-register_activation_hook(__FILE__, function () use ($container) {
-	$migrator = $container->get(Hoo\WordPressPluginFramework\Database\Migrator\MigratorInterface::class);
-	$migrator->up();
+	new WordPressPluginFramework\Hook\ActivationHook($pipeline, __FILE__, function () use ($container) {
+		$migrator = $container->get(Hoo\WordPressPluginFramework\Database\Migrator\MigratorInterface::class);
+		$migrator->up();
 
-	flush_rewrite_rules();
-});
+		flush_rewrite_rules();
+	}),
 
-register_deactivation_hook(__FILE__, function () use ($container) {
-	$migrator = $container->get(Hoo\WordPressPluginFramework\Database\Migrator\MigratorInterface::class);
-	$migrator->down();
+	new WordPressPluginFramework\Hook\DeactivationHook($pipeline, __FILE__, function () use ($container) {
+		$migrator = $container->get(Hoo\WordPressPluginFramework\Database\Migrator\MigratorInterface::class);
+		$migrator->down();
 
-	flush_rewrite_rules();
-});
+		flush_rewrite_rules();
+	}),
+);
+
+$hooker();

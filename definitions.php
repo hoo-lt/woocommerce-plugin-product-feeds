@@ -42,7 +42,7 @@ return [
 			'product_feeds_nonce',
 		),
 	WordPressPluginFramework\Pipeline\PipelineInterface::class => DI\get(WordPressPluginFramework\Pipeline\Pipeline::class),
-	WordPressPluginFramework\Router\Router::class => DI\autowire(),
+	WordPressPluginFramework\Hooker\Hooker::class => DI\autowire(),
 	WordPressPluginFramework\Repositories\Database\Migrator\RepositoryInterface::class => DI\autowire(WordPressPluginFramework\Repositories\Database\Migrator\Repository::class)
 		->constructorParameter(
 			'key',
