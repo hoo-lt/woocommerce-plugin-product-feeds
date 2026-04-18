@@ -7,13 +7,13 @@ use Hoo\WordPressPluginFramework\View\ViewInterface;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 
-class Controller
+readonly class Controller
 {
 	public function __construct(
-		protected readonly RequestInterface $request,
-		protected readonly ViewInterface $view,
-		protected readonly Presentation\Mapper\TermMeta\Mapper $termMetaMapper,
-		protected readonly Domain\Repository\TermMeta\RepositoryInterface $termMetaRepository,
+		protected RequestInterface $request,
+		protected ViewInterface $view,
+		protected Presentation\Mapper\TermMeta\Mapper $termMetaMapper,
+		protected Domain\Repository\TermMeta\RepositoryInterface $termMetaRepository,
 	) {
 	}
 
