@@ -42,7 +42,6 @@ $hookFactory = $container->get(HookFactoryInterface::class);
 $migrator = $container->get(MigratorInterface::class);
 $verifyNonce = $container->autowire(Middlewares\VerifyNonce\Middleware::class);
 $termMetaController = $container->get(Presentation\Controllers\TermMeta\Controller::class);
-$termMetaPostAction = $container->get(Presentation\Actions\TermMeta\Post\Action::class);
 
 $hooks = [
 	$hookFactory->activation(__FILE__, function () use ($migrator, $router) {
@@ -108,7 +107,7 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 
 		$hookFactory->action(
 			"created_{$taxonomy->value}",
-			fn(int $term_id) => $termMetaPostAction($term_id)
+			fn(int $term_id) => $termMetaController->post($term_id)
 		)
 			->withMiddlewares(
 				$container->autowire(Middlewares\VerifyNonce\Middleware::class)
@@ -121,13 +120,13 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 						'capability',
 						Middlewares\CurrentUserCan\Capability\Capability::ManageWooCommerce,
 					),
-				$container->get(Middlewares\Validate\Middleware::class)
+				$container->get(Middlewares\ValidateRequest\Middleware::class)
 					->post(Domain\TermMeta::KEY)->string(),
 			),
 
 		$hookFactory->action(
 			"edited_{$taxonomy->value}",
-			fn(int $term_id) => $termMetaPostAction($term_id)
+			fn(int $term_id) => $termMetaController->post($term_id)
 		)
 			->withMiddlewares(
 				$container->autowire(Middlewares\VerifyNonce\Middleware::class)
@@ -140,7 +139,7 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 						'capability',
 						Middlewares\CurrentUserCan\Capability\Capability::ManageWooCommerce,
 					),
-				$container->get(Middlewares\Validate\Middleware::class)
+				$container->get(Middlewares\ValidateRequest\Middleware::class)
 					->post(Domain\TermMeta::KEY)->string(),
 			),
 	];
