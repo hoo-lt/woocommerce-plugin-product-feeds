@@ -3,7 +3,7 @@
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Tags;
 
 use Hoo\WordPressPluginFramework\Collection;
-use Hoo\WordPressPluginFramework\Http;
+use Hoo\WordPressPluginFramework\Http\Url\UrlInterface;
 
 readonly class Tag implements Collection\Item\ItemInterface
 {
@@ -11,7 +11,7 @@ readonly class Tag implements Collection\Item\ItemInterface
 		protected Tag\Id $id,
 		protected ?Tag\Id $parentId,
 		public string $name,
-		public Http\UrlInterface $url,
+		public UrlInterface $url,
 	) {
 	}
 

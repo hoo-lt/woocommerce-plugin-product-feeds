@@ -3,7 +3,7 @@
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Domain\Products;
 
 use Hoo\WordPressPluginFramework\Collection;
-use Hoo\WordPressPluginFramework\Http;
+use Hoo\WordPressPluginFramework\Http\Url\UrlInterface;
 
 readonly class Product implements Collection\Item\ItemInterface
 {
@@ -19,7 +19,7 @@ readonly class Product implements Collection\Item\ItemInterface
 		protected ?Product\Id $parentId,
 		public string $name,
 		public ?string $description,
-		public Http\UrlInterface $url,
+		public UrlInterface $url,
 		public Product\Price $price,
 		public ?string $sku,
 		public ?string $gtin,

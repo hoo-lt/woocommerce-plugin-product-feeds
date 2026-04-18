@@ -121,6 +121,8 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 						'capability',
 						Middlewares\CurrentUserCan\Capability\Capability::ManageWooCommerce,
 					),
+				$container->get(Middlewares\Validate\Middleware::class)
+					->post(Domain\TermMeta::KEY)->string(),
 			),
 
 		$hookFactory->action(
@@ -138,6 +140,8 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 						'capability',
 						Middlewares\CurrentUserCan\Capability\Capability::ManageWooCommerce,
 					),
+				$container->get(Middlewares\Validate\Middleware::class)
+					->post(Domain\TermMeta::KEY)->string(),
 			),
 	];
 }

@@ -3,12 +3,12 @@
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Presentation\Actions\TermMeta\Post;
 
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
-use Hoo\WooCommercePlugin\LtProductFeeds\Presentation\ValidatedRequests\TermMeta\Post\ValidatedRequest;
+use Hoo\WordPressPluginFramework\Http\Request\RequestInterface;
 
 readonly class Action
 {
 	public function __construct(
-		protected ValidatedRequest $validatedRequest,
+		protected RequestInterface $request,
 		protected Domain\Repository\TermMeta\RepositoryInterface $termMetaRepository,
 	) {
 	}
@@ -18,7 +18,7 @@ readonly class Action
 		$this->termMetaRepository->set(
 			$id,
 			Domain\TermMeta::from(
-				$this->validatedRequest->post(Domain\TermMeta::KEY)
+				$this->request->post(Domain\TermMeta::KEY)
 			)
 		);
 	}

@@ -2,18 +2,19 @@
 
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Infrastructure\Mappers\Product\Simple;
 
-use Hoo\WordPressPluginFramework\Http;
+use Hoo\WordPressPluginFramework\Http\Url\Url;
+use Hoo\WordPressPluginFramework\Http\Url\UrlInterface;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 
 class Mapper
 {
-	protected readonly Http\Url $url;
+	protected readonly Url $url;
 
 	public function __construct(
 		string $url,
 		string $path,
 	) {
-		$this->url = Http\Url::from($url)
+		$this->url = Url::from($url)
 			->withPath($path);
 	}
 

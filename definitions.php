@@ -26,7 +26,7 @@ return [
 			$wpdb->prefix,
 		),
 	WordPressPluginFramework\Database\SelectInterface::class => DI\get(WordPressPluginFramework\Database\Select::class),
-	WordPressPluginFramework\Http\RequestInterface::class => DI\factory(fn() => new WordPressPluginFramework\Http\Request(
+	WordPressPluginFramework\Http\Request\RequestInterface::class => DI\factory(fn() => new WordPressPluginFramework\Http\Request\Request(
 		$_GET,
 		$_POST,
 	)),
@@ -42,6 +42,7 @@ return [
 			'product_feeds_nonce',
 		),
 	WordPressPluginFramework\Pipeline\PipelineInterface::class => DI\get(WordPressPluginFramework\Pipeline\Pipeline::class),
+	WordPressPluginFramework\Http\Request\Validator\ValidatorInterface::class => DI\get(WordPressPluginFramework\Http\Request\Validator\Validator::class),
 	WordPressPluginFramework\Hook\HookFactoryInterface::class => DI\get(WordPressPluginFramework\Hook\HookFactory::class),
 	WordPressPluginFramework\Route\RouteFactoryInterface::class => DI\get(WordPressPluginFramework\Route\RouteFactory::class),
 	WordPressPluginFramework\Hooker\HookerInterface::class => DI\get(WordPressPluginFramework\Hooker\Hooker::class),

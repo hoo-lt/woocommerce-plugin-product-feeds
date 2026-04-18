@@ -2,7 +2,8 @@
 
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Presentation\Controller\Feed;
 
-use Hoo\WordPressPluginFramework\Http;
+use Hoo\WordPressPluginFramework\Http\Response\Response;
+use Hoo\WordPressPluginFramework\Http\Response\ResponseInterface;
 use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 
@@ -18,9 +19,9 @@ readonly class Controller implements Presentation\Controller\Feed\ControllerInte
 	) {
 	}
 
-	public function __invoke(): Http\ResponseInterface
+	public function __invoke(): ResponseInterface
 	{
-		return new Http\Response(
+		return new Response(
 			[
 				'Content-Type' => $this->mapper->contentType(),
 			],

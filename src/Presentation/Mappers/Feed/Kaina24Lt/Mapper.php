@@ -2,7 +2,7 @@
 
 namespace Hoo\WooCommercePlugin\LtProductFeeds\Presentation\Mapper\Feed\Kaina24Lt;
 
-use Hoo\WordPressPluginFramework\Http;
+use Hoo\WordPressPluginFramework\Http\Url\UrlInterface;
 use Hoo\WooCommercePlugin\LtProductFeeds\Domain;
 use Hoo\WooCommercePlugin\LtProductFeeds\Presentation;
 use XMLWriter;
@@ -192,7 +192,7 @@ class Mapper implements Presentation\Mapper\Feed\MapperInterface
 		$this->xmlWriter->endElement();
 	}
 
-	protected function utmUrl(Http\UrlInterface $url): Http\UrlInterface
+	protected function utmUrl(UrlInterface $url): UrlInterface
 	{
 		return $url
 			->withQueryValue('utm_source', $this->utmSource)
