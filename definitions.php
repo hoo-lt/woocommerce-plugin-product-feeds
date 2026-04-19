@@ -36,14 +36,18 @@ return [
 			'source',
 			'product-feeds',
 		),
-	WordPressPluginFramework\Middlewares\VerifyNonce\Middleware::class => DI\autowire()
+	WordPressPluginFramework\Pipeline\Middlewares\VerifyNonce\Middleware::class => DI\autowire()
 		->constructorParameter(
 			'name',
 			'product_feeds_nonce',
 		),
 	WordPressPluginFramework\Pipeline\PipelineInterface::class => DI\get(WordPressPluginFramework\Pipeline\Pipeline::class),
-	WordPressPluginFramework\Hook\HookFactoryInterface::class => DI\get(WordPressPluginFramework\Hook\HookFactory::class),
-	WordPressPluginFramework\Route\RouteFactoryInterface::class => DI\get(WordPressPluginFramework\Route\RouteFactory::class),
+	WordPressPluginFramework\Hooker\Hooks\HookFactoryInterface::class => DI\get(WordPressPluginFramework\Hooker\Hooks\HookFactory::class),
+	WordPressPluginFramework\Router\Routes\RouteFactoryInterface::class => DI\autowire(WordPressPluginFramework\Router\Routes\RouteFactory::class)
+		->constructorParameter(
+			'namespace',
+			'lt-product-feeds/v1',
+		),
 	WordPressPluginFramework\Hooker\HookerInterface::class => DI\get(WordPressPluginFramework\Hooker\Hooker::class),
 	WordPressPluginFramework\Router\RouterInterface::class => DI\autowire(WordPressPluginFramework\Router\Router::class),
 	WordPressPluginFramework\Repositories\Database\Migrator\RepositoryInterface::class => DI\autowire(WordPressPluginFramework\Repositories\Database\Migrator\Repository::class)

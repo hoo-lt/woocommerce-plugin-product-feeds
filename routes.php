@@ -1,0 +1,7 @@
+<?php
+
+$routes = [
+
+];
+
+return $routes;
