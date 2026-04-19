@@ -97,7 +97,7 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 						Pipeline\Middlewares\CurrentUserCan\Capability\Capability::ManageWooCommerce,
 					),
 				$validateRequestMiddleware
-					->post(Domain\TermMeta::KEY)->string(),
+					->body(Domain\TermMeta::KEY)->string(),
 			),
 
 		$hookFactory->action(
@@ -116,7 +116,7 @@ foreach (Domain\Taxonomy::cases() as $taxonomy) {
 						Pipeline\Middlewares\CurrentUserCan\Capability\Capability::ManageWooCommerce,
 					),
 				$validateRequestMiddleware
-					->post(Domain\TermMeta::KEY)->string(),
+					->body(Domain\TermMeta::KEY)->string(),
 			),
 	];
 }

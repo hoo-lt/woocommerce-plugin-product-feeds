@@ -27,8 +27,11 @@ return [
 		),
 	WordPressPluginFramework\Database\SelectInterface::class => DI\get(WordPressPluginFramework\Database\Select::class),
 	WordPressPluginFramework\Http\Request\RequestInterface::class => DI\factory(fn() => new WordPressPluginFramework\Http\Request\Request(
+		DI\get(WordPressPluginFramework\Json\JsonInterface::class),
+		$_SERVER,
 		$_GET,
 		$_POST,
+		file_get_contents('php://input') ?: '',
 	)),
 	WordPressPluginFramework\Json\JsonInterface::class => DI\get(WordPressPluginFramework\Json\Json::class),
 	WordPressPluginFramework\Loggers\LoggerInterface::class => DI\autowire(WooCommercePluginFramework\Loggers\Logger::class)

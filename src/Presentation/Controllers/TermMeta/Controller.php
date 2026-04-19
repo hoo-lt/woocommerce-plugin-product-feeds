@@ -60,7 +60,7 @@ readonly class Controller
 		$this->termMetaRepository->set(
 			$id,
 			Domain\TermMeta::from(
-				$this->request->post(Domain\TermMeta::KEY)
+				$this->request->body(Domain\TermMeta::KEY)
 			)
 		);
 	}
